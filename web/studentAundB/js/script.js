@@ -3,7 +3,7 @@ window.onload = function () {
     const dps = []; // dataPoints
     const chart = new CanvasJS.Chart("chartContainer", {
         title: {
-            text: "Dynamic Data"
+            text: "Aktienkurse"
         },
         axisY: {
             includeZero: false
