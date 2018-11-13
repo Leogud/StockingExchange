@@ -23,7 +23,7 @@ window.onload = function () {
 
         count = count || 1;
 
-        for (var j = 0; j < count; j++) {
+        for (let j = 0; j < count; j++) {
             yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
             dps.push({
                 x: xVal,
@@ -38,6 +38,7 @@ window.onload = function () {
 
         chart.render();
     };
+
 
     updateChart(dataLength);
     setInterval(function(){updateChart()}, updateInterval);
