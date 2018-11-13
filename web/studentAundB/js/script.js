@@ -1,8 +1,8 @@
 window.onload = function () {
 
-    var dps = []; // dataPoints
-    var chart = new CanvasJS.Chart("chartContainer", {
-        title :{
+    const dps = []; // dataPoints
+    const chart = new CanvasJS.Chart("chartContainer", {
+        title: {
             text: "Dynamic Data"
         },
         axisY: {
@@ -14,17 +14,17 @@ window.onload = function () {
         }]
     });
 
-    var xVal = 0;
-    var yVal = 100;
-    var updateInterval = 1000;
-    var dataLength = 20; // number of dataPoints visible at any point
+    let xVal = 0;
+    let yVal = 100;
+    const updateInterval = 1000;
+    const dataLength = 20; // number of dataPoints visible at any point
 
-    var updateChart = function (count) {
+    const updateChart = function (count) {
 
         count = count || 1;
 
         for (var j = 0; j < count; j++) {
-            yVal = yVal +  Math.round(5 + Math.random() *(-5-5));
+            yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
             dps.push({
                 x: xVal,
                 y: yVal
