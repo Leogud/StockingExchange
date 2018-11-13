@@ -1,0 +1,68 @@
+#chartContainer {
+    height: 100%;
+    width: 50%;
+    margin-left: 10%;
+    float: left;
+}
+
+header {
+
+    height: 20%;
+
+}
+
+h1 {
+    text-align: center;
+    font-size: 4em;
+}
+
+#h1 {
+    float: left;
+    width: 80%;
+}
+
+body, html {
+    height: 100%;
+    margin: 3px;
+}
+
+#headerDiv {
+    float: left;
+    width: 20%;
+}
+
+button{
+    padding: 5% 10%;
+    margin-top: 30%;
+}
+
+#buyButton{
+    float: right;
+    height: 100%;
+    width: 20%;
+
+}
+
+#bigDiv{
+    height: 35%;
+}
+
+#biggerDiv{
+    height: 35%;
+    display: flex;
+    justify-content: center;
+}
+
+#leftDiv{
+    height: 100%;
+    width: 40%;
+    border: solid black 1px;
+    margin-right: 5%;
+}
+
+#rightDiv{
+    height: 100%;
+    width: 40%;
+    border: solid black 1px;
+    margin-left: 5%;
+}
