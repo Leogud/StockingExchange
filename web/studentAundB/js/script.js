@@ -1,4 +1,6 @@
-window.onload = function () {
+
+window.onload = init;
+function init () {
 
     const dps = []; // dataPoints
     const chart = new CanvasJS.Chart("chartContainer", {
@@ -41,6 +43,18 @@ window.onload = function () {
 
 
     updateChart(dataLength);
+    let url = "http://localhost:3000";
+    let params = "";
+    let http = new XMLHttpRequest();
+
+    http.open("GET", url+"/data/alleAktien"+params, true);
+    http.onreadystatechange = function()
+    {
+        if(http.readyState == 4 && http.status == 200) {
+            alert(http.responseText);
+        }
+    }
+    http.send(null);
     setInterval(function(){updateChart()}, updateInterval);
 
 };
