@@ -39,22 +39,30 @@ function init () {
         }
 
         chart.render();
+        let url = "http://localhost:3000";
+        let params = "";
+        let http = new XMLHttpRequest();
+        let save= null;
+        http.open("GET", url+"/data/alleAktien"+params, true);
+        http.onreadystatechange = function()
+        {
+            if(http.readyState === 4 && http.status === 200) {
+                alert(http.responseText);
+                save=http.responseText;
+
+
+            }
+        };
+        if(save!=null){
+            alert(save);
+        }
+        http.send(null);
     };
 
 
     updateChart(dataLength);
-    let url = "http://localhost:3000";
-    let params = "";
-    let http = new XMLHttpRequest();
 
-    http.open("GET", url+"/data/alleAktien"+params, true);
-    http.onreadystatechange = function()
-    {
-        if(http.readyState == 4 && http.status == 200) {
-            alert(http.responseText);
-        }
-    }
-    http.send(null);
+
     setInterval(function(){updateChart()}, updateInterval);
 
 };
