@@ -33,37 +33,41 @@ body, html {
 
 }
 
-button{
-    padding: 5% 10%;
-    margin-top: 30%;
+input, select, fieldset {
+    margin-bottom: 1em;
 }
 
-#buyButton{
+button {
+    padding: 2% 5%;
+    float: left;
+}
+
+#buyButton {
     float: right;
     height: 100%;
     width: 20%;
 
 }
 
-#bigDiv{
+#bigDiv {
     height: 35%;
 }
 
-#biggerDiv{
+#biggerDiv {
     height: 35%;
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
-#leftDiv{
+#leftDiv {
     height: 100%;
     width: 40%;
     border: solid black 1px;
     margin-right: 5%;
 }
 
-#rightDiv{
+#rightDiv {
     height: 100%;
     width: 40%;
     border: solid black 1px;

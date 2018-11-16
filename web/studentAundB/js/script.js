@@ -1,10 +1,17 @@
-
 window.onload = init;
-function init () {
-    var chart = new CanvasJS.Chart("chartContainer", {
+const updateInterval = 1000;
+const dataLength = 20; // number of dataPoints visible at any point
+const url = "http://localhost:3000";
+let save = null;
+let userData = null;
+let placement = null;
+let shares = null;
+
+function init() {
+    const chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
         theme: "light2", // "light1", "light2", "dark1", "dark2"
-        title:{
+        title: {
             text: "Alle Aktien"
         },
         axisY: {
@@ -30,10 +37,6 @@ function init () {
     chart.render();
 
 
-    let save= null;
-    let userData=null;
-    let placement=null;
-
     // const dps = []; // dataPoints
     // const chart = new CanvasJS.Chart("chartContainer", {
     //     title: {
@@ -47,12 +50,7 @@ function init () {
     //         dataPoints: dps
     //     }]
     // });
-
-
-    const updateInterval = 1000;
-    const dataLength = 20; // number of dataPoints visible at any point
-
-    const updateChart = function () {
+    function updateChart() {
 
         // count = count || 1;
         //
@@ -70,14 +68,12 @@ function init () {
         // }
 
         chart.render();
-        let url = "http://localhost:3000";
 
 
         //für die Rangliste
         let http3 = new XMLHttpRequest();
-        http3.open("GET", url+"/data/besitzAlle", true);
-        http3.onreadystatechange = function()
-        {
+        http3.open("GET", url + "/data/besitzAlle", true);
+        http3.onreadystatechange = function () {
 
             if (http3.readyState === 4 && http3.status === 200) {
 
@@ -86,17 +82,16 @@ function init () {
 
             }
         };
-        if(placement!= null){
+        if (placement != null) {
             placement.sort();
-            let leftDiv= document.getElementById("leftDiv");
-            leftDiv.innerText="Rangliste";
+            let leftDiv = document.getElementById("leftDiv");
+            leftDiv.innerText = "Rangliste";
 
-            for(let i = 0; i<placement.length;i++){
-                let div=  document.createElement("div");
+            for (let i = 0; i < placement.length; i++) {
+                let div = document.createElement("div");
                 leftDiv.appendChild(div);
 
-                div.innerText=placement[i].name +"    "+ placement[i].summe;
-
+                div.innerText = placement[i].name + "    " + placement[i].summe;
 
 
             }
@@ -105,74 +100,105 @@ function init () {
         http3.send(null);
 
 
-
         let http2 = new XMLHttpRequest();
-        let name= document.getElementById("Benutzer");
-        let kontostand=document.getElementById("Kontostand");
+        let name = document.getElementById("Benutzer");
+        let kontostand = document.getElementById("Kontostand");
         //für benutzernamen und kontostand
-        http2.open("GET", url+"/data/userData", true);
-        http2.onreadystatechange = function()
-        {
-            if(http2.readyState === 4 && http2.status === 200) {
+        http2.open("GET", url + "/data/userData", true);
+        http2.onreadystatechange = function () {
+            if (http2.readyState === 4 && http2.status === 200) {
 
-                userData=JSON.parse(http2.responseText);
-
+                userData = JSON.parse(http2.responseText);
 
 
             }
         };
-        if(userData!=null){
+        if (userData != null) {
 
 
-                // alert("Name: "+ userData.name);
-                // alert("Kontostand: "+ userData.kontostand);
-               name.innerText= "Name: "+ userData.name;
-               kontostand.innerText="Kontostand: "+ userData.kontostand;
+            // alert("Name: "+ userData.name);
+            // alert("Kontostand: "+ userData.kontostand);
+            name.innerText = "Name: " + userData.name;
+            kontostand.innerText = "Kontostand: " + userData.kontostand;
 
 
         }
         http2.send(null);
 
 
-
         //für depot
         let http = new XMLHttpRequest();
-        http.open("GET", url+"/data/depot", true);
-        http.onreadystatechange = function()
-        {
-            if(http.readyState === 4 && http.status === 200) {
+        http.open("GET", url + "/data/depot", true);
+        http.onreadystatechange = function () {
+            if (http.readyState === 4 && http.status === 200) {
 
-                save=JSON.parse(http.responseText);
-
+                save = JSON.parse(http.responseText);
 
 
             }
         };
 
-        if(save!=null){
-            let data= save.positionen;
+        if (save != null) {
+            let data = save.positionen;
 
-            for(let i=0;i<data.length; i++){
-                 alert("Name: "+data[i].aktie.name);
-                alert("Preis: "+ data[i].aktie.preis);
+            for (let i = 0; i < data.length; i++) {
+                //  alert("Name: "+data[i].aktie.name);
+                // alert("Preis: "+ data[i].aktie.preis);
+                //
+                // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
 
-                alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
-                
 
             }
 
 
         }
         http.send(null);
-    };
+
+
+    }
 
 
     updateChart(dataLength);
 
 
-    setInterval(function(){updateChart()}, updateInterval);
+    setInterval(function () {
+        updateChart();
+        getShareName();
+    }, updateInterval);
+
 
 }
+
+
+function getShareName() {
+    //für Aktienname in dropdownmenue
+    let http4 = new XMLHttpRequest();
+    http4.open("GET", url + "/data/alleAktien", true);
+    http4.onreadystatechange = function () {
+        if (http4.readyState === 4 && http4.status === 200) {
+
+            shares = JSON.parse(http4.responseText);
+
+
+        }
+    };
+    if (shares != null) {
+
+        const select = document.getElementById('aktien');
+
+        for (let i = 0; i < shares.length; i++) {
+            select.options[i] = new Option(shares[i].name, i);
+        }
+
+
+    }
+    http4.send(null);
+}
+
+function buyShares() {
+
+}
+
 // function getJSON(anhang){
 //     let url = "http://localhost:3000";
 //     let data=null;

@@ -16,7 +16,19 @@
 </header>
 <div id="bigDiv">
     <div id="chartContainer"></div>
-    <div id="buyButton"> <button type="button"> Kaufen/Verkaufen</button></div>
+    <div id="buyButton">
+        <fieldset>
+            <legend>Kaufen/Verkaufen</legend>
+            <div><label for="aktien">Aktien:</label><select id="aktien"></select></div>
+            <div><label for="anzahl">Anzahl:</label><input type='text' id="anzahl" placeholder="0"></div>
+            <div>
+                <button type="button">Kaufen</button>
+            </div>
+            <div>
+                <button type="button">Verkaufen</button>
+            </div>
+        </fieldset>
+    </div>
 </div>
 <div id="biggerDiv">
     <div id="leftDiv"><p>Rangliste</p></div>
