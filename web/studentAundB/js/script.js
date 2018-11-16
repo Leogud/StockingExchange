@@ -1,7 +1,8 @@
 
 window.onload = init;
 function init () {
-
+    let save= null;
+    let userData=null;
     const dps = []; // dataPoints
     const chart = new CanvasJS.Chart("chartContainer", {
         title: {
@@ -40,21 +41,57 @@ function init () {
 
         chart.render();
         let url = "http://localhost:3000";
-        let params = "";
+
         let http = new XMLHttpRequest();
-        let save= null;
-        http.open("GET", url+"/data/alleAktien"+params, true);
-        http.onreadystatechange = function()
+        let http2 = new XMLHttpRequest();
+        let name= document.getElementById("Benutzer");
+        let kontostand=document.getElementById("Kontostand");
+        //für benutzernamen und kontostand
+        http2.open("GET", url+"/data/userData", true);
+        http2.onreadystatechange = function()
         {
-            if(http.readyState === 4 && http.status === 200) {
-                alert(http.responseText);
-                save=http.responseText;
+            if(http2.readyState === 4 && http2.status === 200) {
+
+                userData=JSON.parse(http2.responseText);
+
 
 
             }
         };
+        if(userData!=null){
+
+
+                // alert("Name: "+ userData.name);
+                // alert("Kontostand: "+ userData.kontostand);
+               name.innerText= "Name: "+ userData.name;
+               kontostand.innerText="Kontostand: "+ userData.kontostand;
+
+
+        }
+        http2.send(null);
+
+
+
+        //für depot
+        http.open("GET", url+"/data/depot", true);
+        http.onreadystatechange = function()
+        {
+            if(http.readyState === 4 && http.status === 200) {
+
+                save=JSON.parse(http.responseText);
+
+
+
+            }
+        };
+
         if(save!=null){
-            alert(save);
+            let data= save.positionen;
+            for(let i=0;i<data.length; i++){
+                alert("Name: "+data[i].aktie.name);
+                alert("Preis: "+ data[i].aktie.preis);
+            }
+
         }
         http.send(null);
     };
@@ -66,3 +103,22 @@ function init () {
     setInterval(function(){updateChart()}, updateInterval);
 
 };
+// function getJSON(anhang){
+//     let url = "http://localhost:3000";
+//     let data=null;
+//     let http = new XMLHttpRequest();
+//     //für benutzernamen und kontostand
+//     http.open("GET", url+anhang, true);
+//     http.onreadystatechange = function()
+//     {
+//         if(http.readyState === 4 && http.status === 200) {
+//
+//             data=JSON.parse(http.responseText);
+//             http.send(null);
+//             return data;
+//
+//
+//         }
+//     };
+//     http.send(null);
+// }
