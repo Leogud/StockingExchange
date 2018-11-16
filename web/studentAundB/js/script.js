@@ -3,6 +3,7 @@ window.onload = init;
 function init () {
     let save= null;
     let userData=null;
+    let placement=null;
     const dps = []; // dataPoints
     const chart = new CanvasJS.Chart("chartContainer", {
         title: {
@@ -42,7 +43,40 @@ function init () {
         chart.render();
         let url = "http://localhost:3000";
 
-        let http = new XMLHttpRequest();
+
+        //für die Rangliste
+        let http3 = new XMLHttpRequest();
+        http3.open("GET", url+"/data/besitzAlle", true);
+        http3.onreadystatechange = function()
+        {
+
+            if (http3.readyState === 4 && http3.status === 200) {
+
+                placement = JSON.parse(http3.responseText);
+
+
+            }
+        };
+        if(placement!= null){
+            placement.sort();
+            let leftDiv= document.getElementById("leftDiv");
+            leftDiv.innerText="Rangliste";
+
+            for(let i = 0; i<placement.length;i++){
+                let div=  document.createElement("div");
+                leftDiv.appendChild(div);
+
+                div.innerText=placement[i].name +"    "+ placement[i].summe;
+
+
+
+            }
+
+        }
+        http3.send(null);
+
+
+
         let http2 = new XMLHttpRequest();
         let name= document.getElementById("Benutzer");
         let kontostand=document.getElementById("Kontostand");
@@ -73,6 +107,7 @@ function init () {
 
 
         //für depot
+        let http = new XMLHttpRequest();
         http.open("GET", url+"/data/depot", true);
         http.onreadystatechange = function()
         {
@@ -88,8 +123,8 @@ function init () {
         if(save!=null){
             let data= save.positionen;
             for(let i=0;i<data.length; i++){
-                alert("Name: "+data[i].aktie.name);
-                alert("Preis: "+ data[i].aktie.preis);
+                // alert("Name: "+data[i].aktie.name);
+                // alert("Preis: "+ data[i].aktie.preis);
             }
 
         }
@@ -102,7 +137,7 @@ function init () {
 
     setInterval(function(){updateChart()}, updateInterval);
 
-};
+}
 // function getJSON(anhang){
 //     let url = "http://localhost:3000";
 //     let data=null;
