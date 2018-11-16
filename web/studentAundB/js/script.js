@@ -1,44 +1,73 @@
 
 window.onload = init;
 function init () {
+    var chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        theme: "light2", // "light1", "light2", "dark1", "dark2"
+        title:{
+            text: "Alle Aktien"
+        },
+        axisY: {
+            title: "Wert"
+        },
+        data: [{
+            type: "column",
+            showInLegend: true,
+            legendMarkerColor: "grey",
+            legendText: "aktualisiert jede Sekunde",
+            dataPoints: [
+                // { y: 300878, label: "Venezuela" },
+                // { y: 266455,  label: "Saudi" },
+                // { y: 169709,  label: "Canada" },
+                // { y: 158400,  label: "Iran" },
+                // { y: 142503,  label: "Iraq" },
+                // { y: 101500, label: "Kuwait" },
+                // { y: 97800,  label: "UAE" },
+                // { y: 80000,  label: "Russia" }
+            ]
+        }]
+    });
+    chart.render();
+
+
     let save= null;
     let userData=null;
     let placement=null;
-    const dps = []; // dataPoints
-    const chart = new CanvasJS.Chart("chartContainer", {
-        title: {
-            text: "Aktienkurse"
-        },
-        axisY: {
-            includeZero: false
-        },
-        data: [{
-            type: "line",
-            dataPoints: dps
-        }]
-    });
 
-    let xVal = 0;
-    let yVal = 100;
+    // const dps = []; // dataPoints
+    // const chart = new CanvasJS.Chart("chartContainer", {
+    //     title: {
+    //         text: "Aktienkurse"
+    //     },
+    //     axisY: {
+    //         includeZero: false
+    //     },
+    //     data: [{
+    //         type: "line",
+    //         dataPoints: dps
+    //     }]
+    // });
+
+
     const updateInterval = 1000;
     const dataLength = 20; // number of dataPoints visible at any point
 
-    const updateChart = function (count) {
+    const updateChart = function () {
 
-        count = count || 1;
-
-        for (let j = 0; j < count; j++) {
-            yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
-            dps.push({
-                x: xVal,
-                y: yVal
-            });
-            xVal++;
-        }
-
-        if (dps.length > dataLength) {
-            dps.shift();
-        }
+        // count = count || 1;
+        //
+        // for (let j = 0; j < count; j++) {
+        //     yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
+        //     dps.push({
+        //         x: xVal,
+        //         y: yVal
+        //     });
+        //     xVal++;
+        // }
+        //
+        // if (dps.length > dataLength) {
+        //     dps.shift();
+        // }
 
         chart.render();
         let url = "http://localhost:3000";
@@ -122,10 +151,16 @@ function init () {
 
         if(save!=null){
             let data= save.positionen;
+
             for(let i=0;i<data.length; i++){
-                // alert("Name: "+data[i].aktie.name);
-                // alert("Preis: "+ data[i].aktie.preis);
+                 alert("Name: "+data[i].aktie.name);
+                alert("Preis: "+ data[i].aktie.preis);
+
+                alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
+                
+
             }
+
 
         }
         http.send(null);
