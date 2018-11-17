@@ -144,7 +144,7 @@ function init() {
         if ((save != null) && (chart.options.data[0].dataPoints.length===0)) {
             let data = save.positionen;
             for (let i = 0; i < data.length; i++) {
-                 //alert("Name: "+data[i].aktie.name);
+                 // alert("Name: "+data[i].aktie.name);
                  //alert("Preis: "+ data[i].aktie.preis);
                     chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
                 //alert("Name: "+data[i].aktie.name);
@@ -183,6 +183,7 @@ function init() {
     setInterval(function () {
         updateChart();
         getShareName();
+        buyShares();
     }, updateInterval);
 
 
@@ -213,9 +214,57 @@ function getShareName() {
     }
     http4.send(null);
 }
-
+let depot = null;
 function buyShares() {
 
+    // let http4 = new XMLHttpRequest();
+    // http4.open("GET", url + "/data/depot", true);
+    // http4.onload = function () {
+    //     if (http4.readyState === 4 && http4.status === 200) {
+    //
+    //         depot = JSON.parse(http4.responseText);
+    //
+    //
+    //     }
+    // };
+    // if (depot != null) {
+    //
+    //
+    // depot.positionen[0].aktie.anzahl = 7;
+    //
+    //
+    //
+    // }
+    // http4.send(null);
+    //
+    // let http = new XMLHttpRequest();
+    // http.open("POST", url + "/data/depot", true);
+    // http.onload = function () {
+    //     if (http.readyState === 4 && http.status === 200) {
+    //
+    //
+    //
+    //     }
+    // };
+    // http.send(JSON.stringify(depot));
+
+
+}
+
+function postJSONdata(url, data, successCallback, failureCallback) {
+    var request = new XMLHttpRequest();
+    request.open("POST", url, true);
+    request.setRequestHeader("Content-type", "application/json");
+    /* request.onloadend würde auch bei Netzwerkfehlern aufgerufen. */
+    request.onload = function () {
+        if ( 201 != request.status ) {
+            failureCallback(request.response, request.status);
+            return;
+        }
+        successCallback(request.response, request.status);
+    };
+    var dataStringified = JSON.stringify(data);
+    request.send(dataStringified);
 }
 
 // function getJSON(anhang){
