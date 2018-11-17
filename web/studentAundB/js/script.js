@@ -10,6 +10,8 @@ let shares = null;
 
 function init() {
 
+
+
     let chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
         theme: "light2", // "light1", "light2", "dark1", "dark2"
@@ -180,11 +182,14 @@ function init() {
     // updateChart(dataLength);
 
 
+
     setInterval(function () {
         updateChart();
-        getShareName();
         buyShares();
     }, updateInterval);
+
+    setInterval(getShareName,3000)
+
 
 
 }
@@ -214,8 +219,13 @@ function getShareName() {
     }
     http4.send(null);
 }
-let depot = null;
+// let depot = null;
 function buyShares() {
+
+    // let dummy = { "aktie": "Microsoft", "anzahl": "15" };
+    // postJSONdata(url + "/data/umsaetze/add", dummy);
+
+
 
     // let http4 = new XMLHttpRequest();
     // http4.open("GET", url + "/data/depot", true);
@@ -252,7 +262,7 @@ function buyShares() {
 }
 
 function postJSONdata(url, data, successCallback, failureCallback) {
-    var request = new XMLHttpRequest();
+    const request = new XMLHttpRequest();
     request.open("POST", url, true);
     request.setRequestHeader("Content-type", "application/json");
     /* request.onloadend würde auch bei Netzwerkfehlern aufgerufen. */
@@ -263,7 +273,7 @@ function postJSONdata(url, data, successCallback, failureCallback) {
         }
         successCallback(request.response, request.status);
     };
-    var dataStringified = JSON.stringify(data);
+    const dataStringified = JSON.stringify(data);
     request.send(dataStringified);
 }
 
