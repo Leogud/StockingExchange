@@ -133,6 +133,7 @@ function init() {
             if (http.readyState === 4 && http.status === 200) {
 
                 save = JSON.parse(http.responseText);
+                alert(http.responseText)
 
 
             }
@@ -190,13 +191,47 @@ function getShareName() {
             select.options[i] = new Option(shares[i].name, i);
         }
 
-
     }
     http4.send(null);
 }
 
 function buyShares() {
+    let aktienName = "";
+    let http = new XMLHttpRequest();
+    http.open("GET", url + "/data/alleAktien", true);
+    http.onreadystatechange = function () {
+        if (http.readyState === 4 && http.status === 200) {
 
+            shares = JSON.parse(http.responseText);
+
+
+        }
+    };
+    if (shares != null) {
+
+        let aktienName = shares[document.getElementById("aktien").value].name;
+
+    }
+    http.send(null);
+
+
+
+}
+
+function postJSONdata(url, data, successCallback, failureCallback) {
+    const request = new XMLHttpRequest();
+    request.open("POST", url, true);
+    request.setRequestHeader("Content-type", "application/json");
+    /* request.onloadend würde auch bei Netzwerkfehlern aufgerufen. */
+    request.onload = function () {
+        if ( 201 !== request.status ) {
+            failureCallback(request.response, request.status);
+            return;
+        }
+        successCallback(request.response, request.status);
+    };
+    const dataStringified = JSON.stringify(data);
+    request.send(dataStringified);
 }
 
 // function getJSON(anhang){
