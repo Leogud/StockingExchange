@@ -8,6 +8,7 @@ let placement = null;
 let shares = null;
 
 
+
 function init() {
     const chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
@@ -24,7 +25,7 @@ function init() {
             legendMarkerColor: "grey",
             legendText: "aktualisiert jede Sekunde",
             dataPoints: [
-                //  { y: 300878, label: "Venezuela" },
+               //  { y: 300878, label: "Venezuela" },
                 // { y: 266455,  label: "Saudi" },
                 // { y: 169709,  label: "Canada" },
                 // { y: 158400,  label: "Iran" },
@@ -67,6 +68,8 @@ function init() {
         // if (dps.length > dataLength) {
         //     dps.shift();
         // }
+
+
 
 
         //für die Rangliste
@@ -132,7 +135,6 @@ function init() {
             if (http.readyState === 4 && http.status === 200) {
 
                 save = JSON.parse(http.responseText);
-                alert(http.responseText)
 
 
             }
@@ -147,6 +149,9 @@ function init() {
 
                 chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
 
+                 //alert("Name: "+data[i].aktie.name);
+                 //alert("Preis: "+ data[i].aktie.preis);
+                    chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
                 //chart.render();
 
                 //
@@ -169,7 +174,6 @@ function init() {
     setInterval(function () {
         updateChart();
         getShareName();
-        buyShares();
     }, updateInterval);
 
 
@@ -196,89 +200,14 @@ function getShareName() {
             select.options[i] = new Option(shares[i].name, i);
         }
 
+
     }
     http4.send(null);
 }
 
 function buyShares() {
 
-    // let aktie = {"aktie": "Microsoft", "anzahl": "10"};
-    //
-    // let http4 = new XMLHttpRequest();
-    // let test = null;
-    // http4.open("GET", url + "/data/umsaetze/add", true);
-    // http4.onreadystatechange = function () {
-    //     if (http4.readyState === 4 && http4.status === 200) {
-    //
-    //         test = JSON.parse(JSON.stringify(aktie));
-    //
-    //     }
-    // };
-    // if (test != null) {
-    //
-    //
-    // }
-    // http4.send(JSON.stringify(test));
-
-
-    // let http = new XMLHttpRequest();
-    // http.open("GET", url + "/data/depot", true);
-    // http.onreadystatechange = function () {
-    //     if (http.readyState === 4 && http.status === 200) {
-    //
-    //         save = JSON.parse(http.responseText);
-    //
-    //
-    //     }
-    // };
-    //
-    // if (save != null) {
-    //     let data = save.positionen;
-    //
-    //     let test = data[0];
-    //     test.aktie.anzahl = 2;
-    //
-    //
-    // }
-    // http.send(JSON.stringify(test));
-
-    // let aktienName = "";
-    //     // let http = new XMLHttpRequest();
-    //     // http.open("GET", url + "/data/alleAktien", true);
-    //     // http.onreadystatechange = function () {
-    //     //     if (http.readyState === 4 && http.status === 200) {
-    //     //
-    //     //         shares = JSON.parse(http.responseText);
-    //     //
-    //     //
-    //     //     }
-    //     // };
-    //     // if (shares != null) {
-    //     //
-    //     //      aktienName = shares[document.getElementById("aktien").value].name;
-    //     //      alert(JSON.stringify(shares[0]))
-    //     //
-    //     // }
-    //     // http.send(null);
-
-
 }
-
-// function postJSONdata(url, data, successCallback, failureCallback) {
-//     const request = new XMLHttpRequest();
-//     request.open("POST", url, true);
-//     request.setRequestHeader("Content-type", "application/json");
-//     /* request.onloadend würde auch bei Netzwerkfehlern aufgerufen. */
-//     request.onload = function () {
-//         if (201 !== request.status) {
-//             failureCallback(request.response, request.status);
-//             return;
-//         }
-//         successCallback(request.response, request.status);
-//     };
-//     const dataStringified = JSON.stringify(data);
-//     request.send(dataStringified);
-// }
 
 // function getJSON(anhang){
 //     let url = "http://localhost:3000";
