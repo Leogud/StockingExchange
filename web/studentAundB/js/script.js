@@ -1,6 +1,5 @@
 window.onload = init;
 const updateInterval = 1000;
-const dataLength = 20; // number of dataPoints visible at any point
 const url = "http://localhost:3000";
 let save = null;
 let userData = null;
@@ -10,7 +9,8 @@ let shares = null;
 
 
 function init() {
-    const chart = new CanvasJS.Chart("chartContainer", {
+
+    let chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
         theme: "light2", // "light1", "light2", "dark1", "dark2"
         title: {
@@ -140,25 +140,29 @@ function init() {
             }
         };
 
-        if (save != null) {
-            let data = save.positionen;
 
+        if ((save != null) && (chart.options.data[0].dataPoints.length===0)) {
+            let data = save.positionen;
             for (let i = 0; i < data.length; i++) {
                  //alert("Name: "+data[i].aktie.name);
                  //alert("Preis: "+ data[i].aktie.preis);
-
-                     chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
-
+                    chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
                 //chart.render();
-
                 //
                 // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
 
-
             }
+
             chart.render();
 
+        }else if((save != null) && (chart.options.data[0].dataPoints.length>0)){
+            let data = save.positionen;
+            for (let i = 0; i < data.length; i++) {
+                chart.options.data[0].dataPoints[i].y = data[i].aktie.preis;
+            }
+            chart.render();
         }
+
         http.send(null);
 
 
