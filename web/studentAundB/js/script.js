@@ -152,11 +152,11 @@ function init() {
                 //alert("Name: "+data[i].aktie.name);
                 //alert("Preis: "+ data[i].aktie.preis);
 
-                chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+               // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
 
                  //alert("Name: "+data[i].aktie.name);
                  //alert("Preis: "+ data[i].aktie.preis);
-                    chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+                 //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
                 //chart.render();
                 //
                 // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
@@ -267,7 +267,7 @@ function postJSONdata(url, data, successCallback, failureCallback) {
     request.setRequestHeader("Content-type", "application/json");
     /* request.onloadend würde auch bei Netzwerkfehlern aufgerufen. */
     request.onload = function () {
-        if ( 201 != request.status ) {
+        if ( 201 !== request.status ) {
             failureCallback(request.response, request.status);
             return;
         }
