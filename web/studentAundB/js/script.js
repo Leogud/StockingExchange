@@ -7,6 +7,8 @@ let userData = null;
 let placement = null;
 let shares = null;
 
+
+
 function init() {
     const chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
@@ -23,7 +25,7 @@ function init() {
             legendMarkerColor: "grey",
             legendText: "aktualisiert jede Sekunde",
             dataPoints: [
-                // { y: 300878, label: "Venezuela" },
+               //  { y: 300878, label: "Venezuela" },
                 // { y: 266455,  label: "Saudi" },
                 // { y: 169709,  label: "Canada" },
                 // { y: 158400,  label: "Iran" },
@@ -67,7 +69,7 @@ function init() {
         //     dps.shift();
         // }
 
-        chart.render();
+
 
 
         //für die Rangliste
@@ -142,14 +144,19 @@ function init() {
             let data = save.positionen;
 
             for (let i = 0; i < data.length; i++) {
-                //  alert("Name: "+data[i].aktie.name);
-                // alert("Preis: "+ data[i].aktie.preis);
+                 //alert("Name: "+data[i].aktie.name);
+                 //alert("Preis: "+ data[i].aktie.preis);
+
+                     chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+
+                //chart.render();
+
                 //
                 // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
 
 
             }
-
+            chart.render();
 
         }
         http.send(null);
@@ -158,7 +165,7 @@ function init() {
     }
 
 
-    updateChart(dataLength);
+    // updateChart(dataLength);
 
 
     setInterval(function () {
