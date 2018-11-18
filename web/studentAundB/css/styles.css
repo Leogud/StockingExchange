@@ -60,16 +60,16 @@ button {
     justify-content: center;
 }
 
-#leftDiv {
-    height: 100%;
-    width: 40%;
-    border: solid black 1px;
-    margin-right: 5%;
-}
+
 
 #rightDiv {
     height: 100%;
     width: 40%;
     border: solid black 1px;
-    margin-left: 5%;
+}
+
+.botDiv{
+    height: 90%;
+    width: 25%;
+    border: solid black 1px;
 }

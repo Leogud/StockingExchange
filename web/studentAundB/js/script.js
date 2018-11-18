@@ -88,12 +88,12 @@ function init() {
         };
         if (placement != null) {
             placement.sort();
-            let leftDiv = document.getElementById("leftDiv");
-            leftDiv.innerText = "Rangliste";
+            let rangliste = document.getElementById("rangliste");
+            rangliste.innerText = "Rangliste";
 
             for (let i = 0; i < placement.length; i++) {
                 let div = document.createElement("div");
-                leftDiv.appendChild(div);
+                rangliste.appendChild(div);
 
                 div.innerText = placement[i].name + "    " + placement[i].summe;
 
