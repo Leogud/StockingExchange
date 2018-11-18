@@ -74,34 +74,7 @@ function init() {
 
 
 
-        //für die Rangliste
-        let http3 = new XMLHttpRequest();
-        http3.open("GET", url + "/data/besitzAlle", true);
-        http3.onreadystatechange = function () {
-
-            if (http3.readyState === 4 && http3.status === 200) {
-
-                placement = JSON.parse(http3.responseText);
-
-
-            }
-        };
-        if (placement != null) {
-            placement.sort();
-            let rangliste = document.getElementById("rangliste");
-            rangliste.innerText = "Rangliste";
-
-            for (let i = 0; i < placement.length; i++) {
-                let div = document.createElement("div");
-                rangliste.appendChild(div);
-
-                div.innerText = placement[i].name + "    " + placement[i].summe;
-
-
-            }
-
-        }
-        http3.send(null);
+        getUpdateRangliste();
 
 
         let http2 = new XMLHttpRequest();
@@ -123,6 +96,7 @@ function init() {
             // alert("Name: "+ userData.name);
             // alert("Kontostand: "+ userData.kontostand);
             name.innerText = "Name: " + userData.name;
+
             kontostand.innerText = "Kontostand: " + userData.kontostand;
 
 
@@ -146,20 +120,16 @@ function init() {
         if ((save != null) && (chart.options.data[0].dataPoints.length===0)) {
             let data = save.positionen;
             for (let i = 0; i < data.length; i++) {
-                 // alert("Name: "+data[i].aktie.name);
-                 //alert("Preis: "+ data[i].aktie.preis);
+
                     chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
-                //alert("Name: "+data[i].aktie.name);
-                //alert("Preis: "+ data[i].aktie.preis);
+
 
                // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
 
-                 //alert("Name: "+data[i].aktie.name);
-                 //alert("Preis: "+ data[i].aktie.preis);
+
                  //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
                 //chart.render();
-                //
-                // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
+
 
             }
 
@@ -193,8 +163,54 @@ function init() {
 
 
 }
+function getUpdateRangliste() {
+//für die Rangliste
+    let http3 = new XMLHttpRequest();
+    http3.open("GET", url + "/data/besitzAlle", true);
+    http3.onreadystatechange = function () {
+
+        if (http3.readyState === 4 && http3.status === 200) {
+
+            placement = JSON.parse(http3.responseText);
 
 
+        }
+    };
+    if (placement != null) {
+            placement[2].summe=20000;
+        // for (let i = 0; i < placement.length; i++) {
+        //     for (let j = 0; j < placement.length; j++) {
+        //       if(  placement[i].summe-placement[j].summe<0){
+        //
+        //           placement[i]=placement[j];
+        //
+        //       }
+        //
+        //     }
+        // }
+        placement.sort();
+
+        let rangliste = document.getElementById("rangliste");
+        if(rangliste.childElementCount>0){
+
+            let rangliste = document.createElement("div");
+            rangliste.id="rangliste";
+        }
+
+        rangliste.innerText = "Rangliste";
+
+        for (let i = 0; i < placement.length; i++) {
+            let div = document.createElement("div");
+            rangliste.appendChild(div);
+
+            div.innerText = placement[i].name + "    " + placement[i].summe;
+
+
+        }
+
+    }
+    http3.send(null);
+}
 function getShareName() {
     //für Aktienname in dropdownmenue
     let http4 = new XMLHttpRequest();
