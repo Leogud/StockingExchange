@@ -7,9 +7,7 @@ let placement = null;
 let shares = null;
 
 
-
 function init() {
-
 
 
     let chart = new CanvasJS.Chart("chartContainer", {
@@ -27,7 +25,7 @@ function init() {
             legendMarkerColor: "grey",
             legendText: "aktualisiert jede Sekunde",
             dataPoints: [
-               //  { y: 300878, label: "Venezuela" },
+                //  { y: 300878, label: "Venezuela" },
                 // { y: 266455,  label: "Saudi" },
                 // { y: 169709,  label: "Canada" },
                 // { y: 158400,  label: "Iran" },
@@ -70,8 +68,6 @@ function init() {
         // if (dps.length > dataLength) {
         //     dps.shift();
         // }
-
-
 
 
         //für die Rangliste
@@ -143,20 +139,20 @@ function init() {
         };
 
 
-        if ((save != null) && (chart.options.data[0].dataPoints.length===0)) {
+        if ((save != null) && (chart.options.data[0].dataPoints.length === 0)) {
             let data = save.positionen;
             for (let i = 0; i < data.length; i++) {
-                 // alert("Name: "+data[i].aktie.name);
-                 //alert("Preis: "+ data[i].aktie.preis);
-                    chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+                // alert("Name: "+data[i].aktie.name);
+                //alert("Preis: "+ data[i].aktie.preis);
+                chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
                 //alert("Name: "+data[i].aktie.name);
                 //alert("Preis: "+ data[i].aktie.preis);
 
-               // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+                // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
 
-                 //alert("Name: "+data[i].aktie.name);
-                 //alert("Preis: "+ data[i].aktie.preis);
-                 //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+                //alert("Name: "+data[i].aktie.name);
+                //alert("Preis: "+ data[i].aktie.preis);
+                //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
                 //chart.render();
                 //
                 // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
@@ -165,7 +161,7 @@ function init() {
 
             chart.render();
 
-        }else if((save != null) && (chart.options.data[0].dataPoints.length>0)){
+        } else if ((save != null) && (chart.options.data[0].dataPoints.length > 0)) {
             let data = save.positionen;
             for (let i = 0; i < data.length; i++) {
                 chart.options.data[0].dataPoints[i].y = data[i].aktie.preis;
@@ -182,15 +178,15 @@ function init() {
     // updateChart(dataLength);
 
 
-
     setInterval(function () {
         updateChart();
-        buyShares();
     }, updateInterval);
 
-    setInterval(getShareName,3000)
+    setInterval(getShareName, 3000);
 
-
+    document.getElementById("kaufen").onclick = function () {
+        buyShares()
+    };
 
 }
 
@@ -218,15 +214,19 @@ function getShareName() {
 
     }
     http4.send(null);
+
 }
-// let depot = null;
+
+let depot = null;
+
 function buyShares() {
 
-    // let dummy = { "aktie": "Microsoft", "anzahl": "15" };
-    // postJSONdata(url + "/data/umsaetze/add", dummy);
-
-
-
+    //
+    // const dummy = {'aktie': 'Microsoft', 'anzahl': '15'};
+    // let rom = JSON.parse(JSON.stringify(dummy));
+    //
+    // postJSONdata(url + "/data/umsaetze/add", rom);
+    //
     // let http4 = new XMLHttpRequest();
     // http4.open("GET", url + "/data/depot", true);
     // http4.onload = function () {
@@ -240,12 +240,13 @@ function buyShares() {
     // if (depot != null) {
     //
     //
-    // depot.positionen[0].aktie.anzahl = 7;
-    //
+    //     depot.positionen[0].aktie.anzahlVerfuegbar = 7;
+    //     postJSONdata(url + "/data/depot", depot);
     //
     //
     // }
     // http4.send(null);
+
     //
     // let http = new XMLHttpRequest();
     // http.open("POST", url + "/data/depot", true);
@@ -261,21 +262,16 @@ function buyShares() {
 
 }
 
-function postJSONdata(url, data, successCallback, failureCallback) {
+function postJSONdata(url, data) {
     const request = new XMLHttpRequest();
     request.open("POST", url, true);
     request.setRequestHeader("Content-type", "application/json");
     /* request.onloadend würde auch bei Netzwerkfehlern aufgerufen. */
-    request.onload = function () {
-        if ( 201 !== request.status ) {
-            failureCallback(request.response, request.status);
-            return;
-        }
-        successCallback(request.response, request.status);
-    };
+
     const dataStringified = JSON.stringify(data);
     request.send(dataStringified);
 }
+
 
 // function getJSON(anhang){
 //     let url = "http://localhost:3000";
