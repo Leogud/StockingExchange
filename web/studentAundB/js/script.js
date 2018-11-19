@@ -203,9 +203,9 @@ function buyShares() {
 
 
     // postJSONdata(url + "/data/umsaetze/add", dummy);
-
-
-
+    //
+    //
+    //
     // let http4 = new XMLHttpRequest();
     // http4.open("GET", url + "/data/depot", true);
     // http4.onload = function () {
@@ -230,7 +230,7 @@ function buyShares() {
     // http.open("POST", url + "/data/depot", true);
     // http.onload = function () {
     //     if (http.readyState === 4 && http.status === 200) {
-    //
+
     //
     //
     //     }
@@ -276,7 +276,10 @@ function getUpdateRangliste() {
         //
         //     }
         // }
-        placement.sort();
+
+        placement.sort(function (a, b) {
+            return b.summe - a.summe;
+        });
         let rangliste = document.getElementById("rangliste");
         if(rangliste.childElementCount>0){
             let rangliste = document.createElement("div");
