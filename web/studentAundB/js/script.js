@@ -7,9 +7,7 @@ let placement = null;
 let shares = null;
 
 
-
 function init() {
-
 
 
     let chart = new CanvasJS.Chart("chartContainer", {
@@ -65,8 +63,6 @@ function init() {
         // }
 
 
-
-
         getUpdateRangliste();
 
 
@@ -89,7 +85,6 @@ function init() {
             // alert("Name: "+ userData.name);
             // alert("Kontostand: "+ userData.kontostand);
             name.innerText = "Name: " + userData.name;
-
             kontostand.innerText = "Kontostand: " + userData.kontostand;
 
 
@@ -114,15 +109,16 @@ function init() {
             let data = save.positionen;
             for (let i = 0; i < data.length; i++) {
 
-                    chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+                chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
 
 
                // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
 
 
-                 //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+                //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
                 //chart.render();
-
+                //
+                // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
 
             }
 
@@ -148,62 +144,18 @@ function init() {
 
     setInterval(function () {
         updateChart();
-        buyShares();
     }, updateInterval);
 
-    setInterval(getShareName,3000)
+    setInterval(getShareName,3000);
 
-
-
-}
-function getUpdateRangliste() {
-//für die Rangliste
-    let http3 = new XMLHttpRequest();
-    http3.open("GET", url + "/data/besitzAlle", true);
-    http3.onreadystatechange = function () {
-
-        if (http3.readyState === 4 && http3.status === 200) {
-
-            placement = JSON.parse(http3.responseText);
-
-
-        }
+    document.getElementById("kaufen").onclick = function () {
+        buyShares()
     };
-    if (placement != null) {
-            placement[2].summe=20000;
-        // for (let i = 0; i < placement.length; i++) {
-        //     for (let j = 0; j < placement.length; j++) {
-        //       if(  placement[i].summe-placement[j].summe<0){
-        //
-        //           placement[i]=placement[j];
-        //
-        //       }
-        //
-        //     }
-        // }
-        placement.sort();
-
-        let rangliste = document.getElementById("rangliste");
-        if(rangliste.childElementCount>0){
-
-            let rangliste = document.createElement("div");
-            rangliste.id="rangliste";
-        }
-
-        rangliste.innerText = "Rangliste";
-
-        for (let i = 0; i < placement.length; i++) {
-            let div = document.createElement("div");
-            rangliste.appendChild(div);
-
-            div.innerText = placement[i].name + "    " + placement[i].summe;
 
 
-        }
-
-    }
-    http3.send(null);
 }
+
+
 function getShareName() {
     //für Aktienname in dropdownmenue
     let http4 = new XMLHttpRequest();
@@ -231,7 +183,25 @@ function getShareName() {
 // let depot = null;
 function buyShares() {
 
-    // let dummy = { "aktie": "Microsoft", "anzahl": "15" };
+    let dummy = { "aktie": { "name": "Microsoft" },
+        "anzahl": 15 };
+
+    let dummy2 = JSON.parse(JSON.stringify(dummy));
+
+    const xhr = new XMLHttpRequest();
+    const url2 = url + "/data/umsatze/add";
+    xhr.open("POST", url2, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    const data = JSON.stringify(dummy2);
+    alert(data);
+    xhr.send(data);
+
+
+
+
+
+
     // postJSONdata(url + "/data/umsaetze/add", dummy);
 
 
