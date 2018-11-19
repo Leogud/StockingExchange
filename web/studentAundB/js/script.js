@@ -8,8 +8,6 @@ let shares = null;
 
 
 function init() {
-
-
     let chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
         theme: "light2", // "light1", "light2", "dark1", "dark2"
@@ -24,9 +22,7 @@ function init() {
             showInLegend: true,
             legendMarkerColor: "grey",
             legendText: "aktualisiert jede Sekunde",
-            dataPoints: [
-
-            ]
+            dataPoints: []
         }]
     });
     chart.render();
@@ -63,7 +59,7 @@ function init() {
         // }
 
 
-         getUpdateRangliste();
+        getUpdateRangliste();
 
 
         let http2 = new XMLHttpRequest();
@@ -105,14 +101,14 @@ function init() {
         };
 
 
-        if ((save != null) && (chart.options.data[0].dataPoints.length===0)) {
+        if ((save != null) && (chart.options.data[0].dataPoints.length === 0)) {
             let data = save.positionen;
             for (let i = 0; i < data.length; i++) {
 
                 chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
 
 
-               // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+                // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
 
 
                 //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
@@ -124,7 +120,7 @@ function init() {
 
             chart.render();
 
-        }else if((save != null) && (chart.options.data[0].dataPoints.length>0)){
+        } else if ((save != null) && (chart.options.data[0].dataPoints.length > 0)) {
             let data = save.positionen;
             for (let i = 0; i < data.length; i++) {
                 chart.options.data[0].dataPoints[i].y = data[i].aktie.preis;
@@ -141,12 +137,11 @@ function init() {
     // updateChart(dataLength);
 
 
-
     setInterval(function () {
         updateChart();
     }, updateInterval);
 
-    setInterval(getShareName,3000);
+    setInterval(getShareName, 5000);
 
     document.getElementById("kaufen").onclick = function () {
         buyShares()
@@ -180,81 +175,52 @@ function getShareName() {
     }
     http4.send(null);
 }
-// let depot = null;
+
 function buyShares() {
 
-    let dummy = { "aktie": { "name": "Microsoft" },
-        "anzahl": 15 };
+    let aktienNummer = document.getElementById("aktien").value;
+    let aktie = null;
+    let anzahl = document.getElementById("anzahl").value;
 
-    let dummy2 = JSON.parse(JSON.stringify(dummy));
+    let http4 = new XMLHttpRequest();
+    http4.open("GET", url + "/data/alleAktien", true);
+    http4.onreadystatechange = function () {
+        if (http4.readyState === 4 && http4.status === 200) {
 
-    const xhr = new XMLHttpRequest();
-    const url2 = url + "/data/umsatze/add";
-    xhr.open("POST", url2, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    const data = JSON.stringify(dummy2);
-    alert(data);
-    xhr.send(data);
-
-
+            shares = JSON.parse(http4.responseText);
+            aktie = shares[aktienNummer];
+            alert(JSON.stringify(aktie) + "hey1");
+            buyForReal(aktie, anzahl);
 
 
-
-
-    // postJSONdata(url + "/data/umsaetze/add", dummy);
-    //
-    //
-    //
-    // let http4 = new XMLHttpRequest();
-    // http4.open("GET", url + "/data/depot", true);
-    // http4.onload = function () {
-    //     if (http4.readyState === 4 && http4.status === 200) {
-    //
-    //         depot = JSON.parse(http4.responseText);
-    //
-    //
-    //     }
-    // };
-    // if (depot != null) {
-    //
-    //
-    // depot.positionen[0].aktie.anzahl = 7;
-    //
-    //
-    //
-    // }
-    // http4.send(null);
-    //
-    // let http = new XMLHttpRequest();
-    // http.open("POST", url + "/data/depot", true);
-    // http.onload = function () {
-    //     if (http.readyState === 4 && http.status === 200) {
-
-    //
-    //
-    //     }
-    // };
-    // http.send(JSON.stringify(depot));
-
-
-}
-
-function postJSONdata(url, data, successCallback, failureCallback) {
-    const request = new XMLHttpRequest();
-    request.open("POST", url, true);
-    request.setRequestHeader("Content-type", "application/json");
-    /* request.onloadend würde auch bei Netzwerkfehlern aufgerufen. */
-    request.onload = function () {
-        if ( 201 !== request.status ) {
-            failureCallback(request.response, request.status);
-            return;
         }
-        successCallback(request.response, request.status);
     };
-    const dataStringified = JSON.stringify(data);
-    request.send(dataStringified);
+    http4.send();
+
+
 }
+
+function buyForReal(aktie, anzahl) {
+    alert(JSON.stringify(aktie));
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", "/data/umsaetze/add", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onload = function () {
+        if (201 !== xhr.status) {
+            alert("hey2");
+            return;
+
+        }
+        let test = JSON.stringify(aktie);
+        alert(test + "hey2");
+        alert(anzahl + "hey3");
+
+    };
+    xhr.send('{"aktie":' + test + ',"anzahl":' + anzahl + '}');
+
+}
+
+
 function getUpdateRangliste() {
 //für die Rangliste
     let http3 = new XMLHttpRequest();
@@ -281,9 +247,9 @@ function getUpdateRangliste() {
             return b.summe - a.summe;
         });
         let rangliste = document.getElementById("rangliste");
-        if(rangliste.childElementCount>0){
+        if (rangliste.childElementCount > 0) {
             let rangliste = document.createElement("div");
-            rangliste.id="rangliste";
+            rangliste.id = "rangliste";
         }
         rangliste.innerText = "Rangliste";
         for (let i = 0; i < placement.length; i++) {
@@ -294,22 +260,3 @@ function getUpdateRangliste() {
     }
     http3.send(null);
 }
-// function getJSON(anhang){
-//     let url = "http://localhost:3000";
-//     let data=null;
-//     let http = new XMLHttpRequest();
-//     //für benutzernamen und kontostand
-//     http.open("GET", url+anhang, true);
-//     http.onreadystatechange = function()
-//     {
-//         if(http.readyState === 4 && http.status === 200) {
-//
-//             data=JSON.parse(http.responseText);
-//             http.send(null);
-//             return data;
-//
-//
-//         }
-//     };
-//     http.send(null);
-// }
