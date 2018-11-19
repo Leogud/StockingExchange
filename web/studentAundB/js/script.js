@@ -63,7 +63,7 @@ function init() {
         // }
 
 
-        getUpdateRangliste();
+         getUpdateRangliste();
 
 
         let http2 = new XMLHttpRequest();
@@ -255,7 +255,42 @@ function postJSONdata(url, data, successCallback, failureCallback) {
     const dataStringified = JSON.stringify(data);
     request.send(dataStringified);
 }
+function getUpdateRangliste() {
+//für die Rangliste
+    let http3 = new XMLHttpRequest();
+    http3.open("GET", url + "/data/besitzAlle", true);
+    http3.onreadystatechange = function () {
+        if (http3.readyState === 4 && http3.status === 200) {
+            placement = JSON.parse(http3.responseText);
+        }
+    };
+    if (placement != null) {
 
+        // for (let i = 0; i < placement.length; i++) {
+        //     for (let j = 0; j < placement.length; j++) {
+        //       if(  placement[i].summe-placement[j].summe<0){
+        //
+        //           placement[i]=placement[j];
+        //
+        //       }
+        //
+        //     }
+        // }
+        placement.sort();
+        let rangliste = document.getElementById("rangliste");
+        if(rangliste.childElementCount>0){
+            let rangliste = document.createElement("div");
+            rangliste.id="rangliste";
+        }
+        rangliste.innerText = "Rangliste";
+        for (let i = 0; i < placement.length; i++) {
+            let div = document.createElement("div");
+            rangliste.appendChild(div);
+            div.innerText = placement[i].name + "    " + placement[i].summe;
+        }
+    }
+    http3.send(null);
+}
 // function getJSON(anhang){
 //     let url = "http://localhost:3000";
 //     let data=null;
