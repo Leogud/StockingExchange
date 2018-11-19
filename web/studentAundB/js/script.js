@@ -151,11 +151,13 @@ function init() {
 
     setInterval(function () {
         updateChart();
-        buyShares();
     }, updateInterval);
 
-    setInterval(getShareName,3000)
+    setInterval(getShareName,3000);
 
+    document.getElementById("kaufen").onclick = function () {
+        buyShares()
+    };
 
 
 }
@@ -188,7 +190,25 @@ function getShareName() {
 // let depot = null;
 function buyShares() {
 
-    // let dummy = { "aktie": "Microsoft", "anzahl": "15" };
+    let dummy = { "aktie": { "name": "Microsoft" },
+        "anzahl": 15 };
+
+    let dummy2 = JSON.parse(JSON.stringify(dummy));
+
+    const xhr = new XMLHttpRequest();
+    const url2 = url + "/data/umsatze/add";
+    xhr.open("POST", url2, true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    const data = JSON.stringify(dummy2);
+    alert(data);
+    xhr.send(data);
+
+
+
+
+
+
     // postJSONdata(url + "/data/umsaetze/add", dummy);
 
 
