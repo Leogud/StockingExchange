@@ -145,7 +145,9 @@ function init() {
 
     document.getElementById("kaufen").onclick = function () {
         buyShares()
-        //test();
+    };
+    document.getElementById("verkaufen").onclick = function () {
+        sellShares()
     };
 
 
@@ -252,4 +254,24 @@ function getUpdateRangliste() {
         }
     }
     http3.send(null);
+}
+
+function sellShares() {
+    let aktienNummer = document.getElementById("aktien").value;
+    let aktie = null;
+    let anzahl = document.getElementById("anzahl").value;
+
+    let http4 = new XMLHttpRequest();
+    http4.open("GET", url + "/data/alleAktien", true);
+    http4.onreadystatechange = function () {
+        if (http4.readyState === 4 && http4.status === 200) {
+
+            shares = JSON.parse(http4.responseText);
+            aktie = shares[aktienNummer];
+            buyForReal(aktie, anzahl * -1);
+
+
+        }
+    };
+    http4.send(null);
 }
