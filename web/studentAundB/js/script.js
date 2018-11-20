@@ -80,7 +80,7 @@ function init() {
             // alert("Name: "+ userData.name);
             // alert("Kontostand: "+ userData.kontostand);
             name.innerText = "Name: " + userData.name;
-            kontostand.innerText = "Kontostand: " + userData.kontostand;
+            kontostand.innerText = "Kontostand: " + extround(userData.kontostand,2)+"€";
 
 
         }
@@ -251,9 +251,10 @@ function getUpdateRangliste() {
         // }
         rangliste.innerText = "Rangliste";
         for (let i = 0; i < placement.length; i++) {
+
             let div = document.createElement("div");
             rangliste.appendChild(div);
-            div.innerText = placement[i].name + "    " + placement[i].summe;
+            div.innerText = placement[i].name + "    " + extround(placement[i].summe,2) + "€";
         }
     }
     http3.send(null);
@@ -312,7 +313,10 @@ function getUmsaetze(){
 }
 
 // let anzahlNachrichten = 0;
-
+function extround(zahl,n_stelle) {
+    zahl = (Math.round(zahl * n_stelle) / n_stelle);
+    return zahl;
+}
 function getMessage() {
     let nachrichten = document.getElementById("nachrichten");
     nachrichten.innerText = "Nachrichten";
