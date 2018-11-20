@@ -75,4 +75,5 @@ button {
     height: 90%;
     width: 25%;
     border: solid black 1px;
+    overflow: auto;
 }
