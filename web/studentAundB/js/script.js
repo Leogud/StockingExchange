@@ -188,6 +188,7 @@ function buyShares() {
     let aktie = null;
     let anzahl = document.getElementById("anzahl").value;
     if(anzahl <= 0){
+        document.getElementById("anzahl").value = "0";
         alert("Bitte eine positive Zahl eingeben");
         return;
     }
@@ -266,6 +267,7 @@ function sellShares() {
     let aktie = null;
     let anzahl = document.getElementById("anzahl").value;
     if(anzahl <= 0){
+        document.getElementById("anzahl").value = "0";
         alert("Bitte eine positive Zahl eingeben");
         return;
     }
