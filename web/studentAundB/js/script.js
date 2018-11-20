@@ -187,6 +187,10 @@ function buyShares() {
     let aktienNummer = document.getElementById("aktien").value;
     let aktie = null;
     let anzahl = document.getElementById("anzahl").value;
+    if(anzahl <= 0){
+        alert("Bitte eine positive Zahl eingeben");
+        return;
+    }
 
     let http4 = new XMLHttpRequest();
     http4.open("GET", url + "/data/alleAktien", true);
@@ -260,6 +264,10 @@ function sellShares() {
     let aktienNummer = document.getElementById("aktien").value;
     let aktie = null;
     let anzahl = document.getElementById("anzahl").value;
+    if(anzahl <= 0){
+        alert("Bitte eine positive Zahl eingeben");
+        return;
+    }
 
     let http4 = new XMLHttpRequest();
     http4.open("GET", url + "/data/alleAktien", true);
