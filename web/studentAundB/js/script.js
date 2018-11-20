@@ -244,10 +244,10 @@ function getUpdateRangliste() {
             return b.summe - a.summe;
         });
         let rangliste = document.getElementById("rangliste");
-        if (rangliste.childElementCount > 0) {
-            let rangliste = document.createElement("div");
-            rangliste.id = "rangliste";
-        }
+        // if (rangliste.childElementCount > 0) {
+        //     let rangliste = document.createElement("div");
+        //     rangliste.id = "rangliste";
+        // }
         rangliste.innerText = "Rangliste";
         for (let i = 0; i < placement.length; i++) {
             let div = document.createElement("div");
@@ -276,6 +276,19 @@ function sellShares() {
         }
     };
     http4.send(null);
+}
+function getUmsaetze(){
+    let http5 = new XMLHttpRequest();
+    http5.open("GET", url + "/data/umsaetze", true);
+    http5.onreadystatechange = function () {
+        if (http5.readyState === 4 && http5.status === 200) {
+
+
+
+
+        }
+    };
+    http5.send(null);
 }
 
 // let anzahlNachrichten = 0;
