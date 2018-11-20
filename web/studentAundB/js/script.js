@@ -291,9 +291,21 @@ function getUmsaetze(){
         }
     };
     if(umsaetze!==null ){
+        let kaufen=[];
+
         umsatz.innerText="";
+        umsatz.innerText="Umsätze"+"\n";
         for(let i=0; i<umsaetze.length;i++){
-            umsatz.innerText+="Von "+ umsaetze[i].aktie.name +" gekauft "+ umsaetze[i].anzahl + "\n";
+            if(umsaetze[i].anzahl>0) {
+                kaufen[i]= "Von " + umsaetze[i].aktie.name + " gekauft " + umsaetze[i].anzahl + "\n";
+            }else{
+                kaufen[i]= "Von " + umsaetze[i].aktie.name + " verkauft " + -umsaetze[i].anzahl + "\n";
+            }
+
+        }
+        kaufen= kaufen.reverse();
+        for(let i=0;i<kaufen.length;i++){
+            umsatz.innerText+=kaufen[i];
         }
     }
     http5.send(null);
