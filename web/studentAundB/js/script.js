@@ -145,6 +145,7 @@ function init() {
 
     document.getElementById("kaufen").onclick = function () {
         buyShares()
+        //test();
     };
 
 
@@ -189,33 +190,25 @@ function buyShares() {
 
             shares = JSON.parse(http4.responseText);
             aktie = shares[aktienNummer];
-            alert(JSON.stringify(aktie) + "hey1");
             buyForReal(aktie, anzahl);
 
 
         }
     };
-    http4.send();
+    http4.send(null);
 
 
 }
 
 function buyForReal(aktie, anzahl) {
-    alert(JSON.stringify(aktie));
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/data/umsaetze/add", true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onload = function () {
-        if (201 !== xhr.status) {
-            alert("hey2");
-            return;
 
-        }
-        let test = JSON.stringify(aktie);
-        alert(test + "hey2");
-        alert(anzahl + "hey3");
 
-    };
+    let test = JSON.stringify(aktie);
+
+
     xhr.send('{"aktie":' + test + ',"anzahl":' + anzahl + '}');
 
 }
