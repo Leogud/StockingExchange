@@ -80,7 +80,7 @@ function init() {
             // alert("Name: "+ userData.name);
             // alert("Kontostand: "+ userData.kontostand);
             name.innerText = "Name: " + userData.name;
-            kontostand.innerText = "Kontostand: " + extround(userData.kontostand,2)+"€";
+            kontostand.innerText = "Kontostand: " + extround(userData.kontostand, 2) + "€";
 
 
         }
@@ -187,7 +187,7 @@ function buyShares() {
     let aktienNummer = document.getElementById("aktien").value;
     let aktie = null;
     let anzahl = document.getElementById("anzahl").value;
-    if(anzahl <= 0){
+    if (anzahl <= 0 || isNaN(anzahl)) {
         document.getElementById("anzahl").value = "0";
         alert("Bitte eine positive Zahl eingeben");
         return;
@@ -256,7 +256,7 @@ function getUpdateRangliste() {
 
             let div = document.createElement("div");
             rangliste.appendChild(div);
-            div.innerText = placement[i].name + "    " + extround(placement[i].summe,2) + "€";
+            div.innerText = placement[i].name + "    " + extround(placement[i].summe, 2) + "€";
         }
     }
     http3.send(null);
@@ -266,7 +266,7 @@ function sellShares() {
     let aktienNummer = document.getElementById("aktien").value;
     let aktie = null;
     let anzahl = document.getElementById("anzahl").value;
-    if(anzahl <= 0){
+    if (anzahl <= 0 || isNaN(anzahl)) {
         document.getElementById("anzahl").value = "0";
         alert("Bitte eine positive Zahl eingeben");
         return;
@@ -320,10 +320,11 @@ function getUmsaetze() {
 }
 
 // let anzahlNachrichten = 0;
-function extround(zahl,n_stelle) {
+function extround(zahl, n_stelle) {
     zahl = (Math.round(zahl * n_stelle) / n_stelle);
     return zahl;
 }
+
 function getMessage() {
     let nachrichten = document.getElementById("nachrichten");
     nachrichten.innerText = "Nachrichten";
