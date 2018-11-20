@@ -205,15 +205,12 @@ function buyShares() {
 }
 
 function buyForReal(aktie, anzahl) {
+    document.getElementById("anzahl").innerHTML = "0";
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/data/umsaetze/add", true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
-
-    let test = JSON.stringify(aktie);
-
-
-    xhr.send('{"aktie":' + test + ',"anzahl":' + anzahl + '}');
+    xhr.send('{"aktie":' + JSON.stringify(aktie) + ',"anzahl":' + anzahl + '}');
 
 }
 
