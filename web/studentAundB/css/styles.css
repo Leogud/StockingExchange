@@ -60,7 +60,10 @@ button {
     justify-content: center;
 }
 
-
+#nachrichten {
+    margin-left: 2%;
+    margin-right: 2%;
+}
 
 #rightDiv {
     height: 100%;
@@ -68,7 +71,7 @@ button {
     border: solid black 1px;
 }
 
-.botDiv{
+.botDiv {
     height: 90%;
     width: 25%;
     border: solid black 1px;

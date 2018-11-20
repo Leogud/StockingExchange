@@ -4,7 +4,6 @@ const url = "http://localhost:3000";
 let save = null;
 let userData = null;
 let placement = null;
-let shares = null;
 
 
 function init() {
@@ -139,6 +138,7 @@ function init() {
 
     setInterval(function () {
         updateChart();
+        getMessage();
     }, updateInterval);
 
     setInterval(getShareName, 5000);
@@ -147,12 +147,14 @@ function init() {
         buyShares()
     };
     document.getElementById("verkaufen").onclick = function () {
-        sellShares()
+        sellShares();
     };
 
 
 }
 
+//erstmal so
+let shares = null;
 
 function getShareName() {
     //für Aktienname in dropdownmenue
@@ -168,14 +170,14 @@ function getShareName() {
     };
     if (shares != null) {
 
+
         const select = document.getElementById('aktien');
 
         for (let i = 0; i < shares.length; i++) {
             select.options[i] = new Option(shares[i].name, i);
         }
-
-
     }
+
     http4.send(null);
 }
 
@@ -190,7 +192,7 @@ function buyShares() {
     http4.onreadystatechange = function () {
         if (http4.readyState === 4 && http4.status === 200) {
 
-            shares = JSON.parse(http4.responseText);
+            let shares = JSON.parse(http4.responseText);
             aktie = shares[aktienNummer];
             buyForReal(aktie, anzahl);
 
@@ -274,4 +276,65 @@ function sellShares() {
         }
     };
     http4.send(null);
+}
+
+// let anzahlNachrichten = 0;
+
+function getMessage() {
+    let nachrichten = document.getElementById("nachrichten");
+    nachrichten.innerText = "Nachrichten";
+    let request = new XMLHttpRequest();
+    request.open("GET", "/data/nachrichten", true);
+    request.onreadystatechange = function () {
+        if (request.readyState === 4 && request.status === 200) {
+
+            let messages = JSON.parse(request.responseText);
+
+            // if (anzahlNachrichten !== messages.length) {
+            //     anzahlNachrichten = messages.length;
+            for (let i = messages.length; i > 0; i--) {
+                let nachricht = "Um ";
+                nachricht += messages[i - 1].uhrzeit;
+                nachricht += " Uhr";
+                if (messages[i - 1].text.charAt(0) === "K") {
+                    nachricht += " kaufte";
+                    let substr = messages[i - 1].text.substring(5, messages[i - 1].text.lastIndexOf(":"));
+                    nachricht += substr;
+                    let substr2 = messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(":") + 1, messages[i - 1].text.lastIndexOf(" "));
+                    nachricht += substr2;
+                    if (substr2 !== " 1") {
+                        nachricht += " Aktien";
+                    } else {
+                        nachricht += " Aktie";
+                    }
+                    nachricht += " von";
+                    let substr3 = messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(" "));
+                    nachricht += substr3;
+                } else {
+                    nachricht += " verkaufte";
+                    let substr = messages[i - 1].text.substring(8, messages[i - 1].text.lastIndexOf(":"));
+                    nachricht += substr;
+                    let substr2 = messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(":") + 1, messages[i - 1].text.lastIndexOf(" "));
+                    nachricht += substr2;
+                    if (substr2 !== " 1") {
+                        nachricht += " Aktien";
+                    } else {
+                        nachricht += " Aktie";
+                    }
+                    nachricht += " von";
+                    let substr3 = messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(" "));
+                    nachricht += substr3;
+                }
+                let div = document.createElement("div");
+                nachrichten.appendChild(div);
+                div.innerText = nachricht;
+            }
+        }
+
+
+        // }
+    };
+
+    request.send(null);
+
 }
