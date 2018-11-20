@@ -206,7 +206,7 @@ function buyShares() {
 }
 
 function buyForReal(aktie, anzahl) {
-    document.getElementById("anzahl").innerHTML = "0";
+    document.getElementById("anzahl").value = "0";
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/data/umsaetze/add", true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -275,22 +275,22 @@ function sellShares() {
     };
     http4.send(null);
 }
-function getUmsaetze(){
+
+function getUmsaetze() {
     let http5 = new XMLHttpRequest();
     let umsatz = document.getElementById("umsaetze");
     http5.open("GET", url + "/data/umsaetze", true);
     http5.onreadystatechange = function () {
         if (http5.readyState === 4 && http5.status === 200) {
-        umsaetze= JSON.parse(http5.responseText);
-
+            umsaetze = JSON.parse(http5.responseText);
 
 
         }
     };
-    if(umsaetze!==null ){
-        umsatz.innerText="";
-        for(let i=0; i<umsaetze.length;i++){
-            umsatz.innerText+="Von "+ umsaetze[i].aktie.name +" gekauft "+ umsaetze[i].anzahl + "\n";
+    if (umsaetze !== null) {
+        umsatz.innerText = "";
+        for (let i = 0; i < umsaetze.length; i++) {
+            umsatz.innerText += "Von " + umsaetze[i].aktie.name + " gekauft " + umsaetze[i].anzahl + "\n";
         }
     }
     http5.send(null);
