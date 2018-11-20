@@ -327,6 +327,7 @@ function extround(zahl, n_stelle) {
 
 function getMessage() {
     let nachrichten = document.getElementById("nachrichten");
+
     nachrichten.innerText = "Nachrichten";
     let request = new XMLHttpRequest();
     request.open("GET", "/data/nachrichten", true);
