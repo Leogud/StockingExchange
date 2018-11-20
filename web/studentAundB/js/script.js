@@ -187,6 +187,10 @@ function buyShares() {
     let aktienNummer = document.getElementById("aktien").value;
     let aktie = null;
     let anzahl = document.getElementById("anzahl").value;
+    if(anzahl <= 0){
+        alert("Bitte eine positive Zahl eingeben");
+        return;
+    }
 
     let http4 = new XMLHttpRequest();
     http4.open("GET", url + "/data/alleAktien", true);
@@ -206,15 +210,12 @@ function buyShares() {
 }
 
 function buyForReal(aktie, anzahl) {
+    document.getElementById("anzahl").value = "0";
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/data/umsaetze/add", true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
-
-    let test = JSON.stringify(aktie);
-
-
-    xhr.send('{"aktie":' + test + ',"anzahl":' + anzahl + '}');
+    xhr.send('{"aktie":' + JSON.stringify(aktie) + ',"anzahl":' + anzahl + '}');
 
 }
 
@@ -264,6 +265,10 @@ function sellShares() {
     let aktienNummer = document.getElementById("aktien").value;
     let aktie = null;
     let anzahl = document.getElementById("anzahl").value;
+    if(anzahl <= 0){
+        alert("Bitte eine positive Zahl eingeben");
+        return;
+    }
 
     let http4 = new XMLHttpRequest();
     http4.open("GET", url + "/data/alleAktien", true);
@@ -279,34 +284,34 @@ function sellShares() {
     };
     http4.send(null);
 }
-function getUmsaetze(){
+
+function getUmsaetze() {
     let http5 = new XMLHttpRequest();
     let umsatz = document.getElementById("umsaetze");
     http5.open("GET", url + "/data/umsaetze", true);
     http5.onreadystatechange = function () {
         if (http5.readyState === 4 && http5.status === 200) {
-        umsaetze= JSON.parse(http5.responseText);
-
+            umsaetze = JSON.parse(http5.responseText);
 
 
         }
     };
-    if(umsaetze!==null ){
-        let kaufen=[];
+    if (umsaetze !== null) {
+        let kaufen = [];
 
-        umsatz.innerText="";
-        umsatz.innerText="Umsätze"+"\n";
-        for(let i=0; i<umsaetze.length;i++){
-            if(umsaetze[i].anzahl>0) {
-                kaufen[i]= "Von " + umsaetze[i].aktie.name + " gekauft " + umsaetze[i].anzahl + "\n";
-            }else{
-                kaufen[i]= "Von " + umsaetze[i].aktie.name + " verkauft " + -umsaetze[i].anzahl + "\n";
+        umsatz.innerText = "";
+        umsatz.innerText = "Umsätze" + "\n";
+        for (let i = 0; i < umsaetze.length; i++) {
+            if (umsaetze[i].anzahl > 0) {
+                kaufen[i] = "Von " + umsaetze[i].aktie.name + " gekauft " + umsaetze[i].anzahl + "\n";
+            } else {
+                kaufen[i] = "Von " + umsaetze[i].aktie.name + " verkauft " + -umsaetze[i].anzahl + "\n";
             }
 
         }
-        kaufen= kaufen.reverse();
-        for(let i=0;i<kaufen.length;i++){
-            umsatz.innerText+=kaufen[i];
+        kaufen = kaufen.reverse();
+        for (let i = 0; i < kaufen.length; i++) {
+            umsatz.innerText += kaufen[i];
         }
     }
     http5.send(null);
