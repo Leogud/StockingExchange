@@ -313,6 +313,7 @@ function getUmsaetze() {
         }
         kaufen = kaufen.reverse();
         for (let i = 0; i < kaufen.length; i++) {
+
             umsatz.innerText += kaufen[i];
         }
     }
