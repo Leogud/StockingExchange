@@ -135,15 +135,7 @@ function init() {
 
 function createChart(save) {
     let data = save.positionen;
-    let array=[{data}];
-    for(let i =0;i<data.length;i++){
-       array[i] += getLine(data[i]);
-    }
-
-
-
-
-
+    let dataArray=[];
     let chart = new CanvasJS.Chart("chartContainer", {
         theme: "light2",
         animationEnabled: true,
@@ -166,7 +158,27 @@ function createChart(save) {
 
 
     });
-    chart.options.data.push(array);
+
+    for(let i = 0 ; i<data.length;i++){
+        let dato= {
+            type: "spline",
+            visible: true,
+            name: data[i].aktie.name,
+
+        };
+        chart.options.data.push(dato);
+        dato.dataPoints= [{label: data[i].aktie.name, y: data[i].aktie.preis}];
+
+
+    }
+
+
+
+
+
+
+
+
     chart.render();
 
 
@@ -176,7 +188,7 @@ function toggleDataSeries(e) {
     } else {
         e.dataSeries.visible = true;
     }
-    // chart.render();
+     chart.render();
 }
 }
 // let x=0;
@@ -215,7 +227,7 @@ function toggleDataSeries(e) {
     //     chart.render();
     // }
 // }
-function getLine(data_object){
+function getFirst(data_object){
    let name= data_object.aktie.name;
    let preis= data_object.aktie.preis;
    let array = [{type: "spline",
