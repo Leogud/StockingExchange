@@ -42,6 +42,15 @@ button {
     float: left;
 }
 
+.floatL {
+    float: left;
+}
+
+
+#clear {
+    clear: both;
+}
+
 #buyButton {
     float: right;
     height: 100%;

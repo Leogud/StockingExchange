@@ -8,10 +8,7 @@ const addRevenueAddr = "/data/umsaetze/add";
 const rankingAddr = "/data/besitzAlle";
 const revenueAddr = "/data/umsaetze";
 const messagesAddr = "/data/nachrichten";
-const depot="/data/depot";
-const DataFromUser="/data/userdata";
-let save = null;
-let userData = null;
+const depot = "/data/depot";
 
 
 function init() {
@@ -50,69 +47,63 @@ function init() {
     // });
 
 
-        // count = count || 1;
-        //
-        // for (let j = 0; j < count; j++) {
-        //     yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
-        //     dps.push({
-        //         x: xVal,
-        //         y: yVal
-        //     });
-        //     xVal++;
-        // }
-        //
-        // if (dps.length > dataLength) {
-        //     dps.shift();
-        // }
+    // count = count || 1;
+    //
+    // for (let j = 0; j < count; j++) {
+    //     yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
+    //     dps.push({
+    //         x: xVal,
+    //         y: yVal
+    //     });
+    //     xVal++;
+    // }
+    //
+    // if (dps.length > dataLength) {
+    //     dps.shift();
+    // }
 
 
-
-
-
-        //für depot und chart
-        // let http = new XMLHttpRequest();
-        // http.open("GET", url + "/data/depot", true);
-        // http.onreadystatechange = function () {
-        //     if (http.readyState === 4 && http.status === 200) {
-        //
-        //         save = JSON.parse(http.responseText);
-        //
-        //
-        //     }
-        // };
-        //
-        //
-        // if ((save != null) && (chart.options.data[0].dataPoints.length === 0)) {
-        //     let data = save.positionen;
-        //     for (let i = 0; i < data.length; i++) {
-        //
-        //         chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
-        //
-        //
-        //         // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
-        //
-        //
-        //         //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
-        //         //chart.render();
-        //         //
-        //         // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
-        //
-        //     }
-        //
-        //     chart.render();
-        //
-        // } else if ((save != null) && (chart.options.data[0].dataPoints.length > 0)) {
-        //     let data = save.positionen;
-        //     for (let i = 0; i < data.length; i++) {
-        //         chart.options.data[0].dataPoints[i].y = data[i].aktie.preis;
-        //     }
-        //     chart.render();
-        // }
-        //
-        // http.send(null);
-
-
-
+    //für depot und chart
+    // let http = new XMLHttpRequest();
+    // http.open("GET", url + "/data/depot", true);
+    // http.onreadystatechange = function () {
+    //     if (http.readyState === 4 && http.status === 200) {
+    //
+    //         save = JSON.parse(http.responseText);
+    //
+    //
+    //     }
+    // };
+    //
+    //
+    // if ((save != null) && (chart.options.data[0].dataPoints.length === 0)) {
+    //     let data = save.positionen;
+    //     for (let i = 0; i < data.length; i++) {
+    //
+    //         chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+    //
+    //
+    //         // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+    //
+    //
+    //         //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+    //         //chart.render();
+    //         //
+    //         // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
+    //
+    //     }
+    //
+    //     chart.render();
+    //
+    // } else if ((save != null) && (chart.options.data[0].dataPoints.length > 0)) {
+    //     let data = save.positionen;
+    //     for (let i = 0; i < data.length; i++) {
+    //         chart.options.data[0].dataPoints[i].y = data[i].aktie.preis;
+    //     }
+    //     chart.render();
+    // }
+    //
+    // http.send(null);
 
 
     // updateChart(dataLength);
@@ -123,7 +114,7 @@ function init() {
         getData(messagesAddr, getMessage);
         getData(revenueAddr, getUmsaetze);
         getData(rankingAddr, getUpdateRangliste);
-        getData(DataFromUser,getKontostand );
+        getData(userAddr, getKontostand);
         getData(depot, updateChart);
     }, updateInterval);
 
@@ -141,7 +132,8 @@ function init() {
 
 
 }
-function createChart(){
+
+function createChart() {
     let chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
         theme: "light2", // "light1", "light2", "dark1", "dark2"
@@ -162,6 +154,7 @@ function createChart(){
     chart.render();
     return chart;
 }
+
 function updateChart(save) {
     let chart = createChart();
     if ((save != null) && (chart.options.data[0].dataPoints.length === 0)) {
@@ -169,8 +162,6 @@ function updateChart(save) {
         for (let i = 0; i < data.length; i++) {
 
             chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
-
-
 
 
         }
@@ -185,23 +176,23 @@ function updateChart(save) {
         chart.render();
     }
 }
-function getKontostand(userData){
-    const name = document.getElementById("Benutzer");
-    const kontostand = document.getElementById("Kontostand");
+
+function getKontostand(userData) {
+    const name = document.getElementById("benutzer");
+    const kontostand = document.getElementById("kontostand");
     if (userData != null) {
 
 
         // alert("Name: "+ userData.name);
         // alert("Kontostand: "+ userData.kontostand);
-        name.innerText = "Name: " + userData.name;
-        kontostand.innerText = "Kontostand: " + extround(userData.kontostand, 2) + "€";
+        name.innerText = userData.name;
+        kontostand.innerText = extround(userData.kontostand, 2);
 
 
     }
 }
 
 function getShareName(shares) {
-
     //für Aktienname in dropdownmenue
     const select = document.getElementById('aktien');
 
@@ -225,7 +216,11 @@ function buyShares(shares) {
             if (depot[i].aktie.anzahlVerfuegbar < anzahl) {
                 alert("Es sind leider nicht mehr so viele Aktien von " + depot[i].aktie.name + " verfügbar")
             }
+
         }
+    }
+    if (anzahl * depot[aktienNummer].aktie.preis > document.getElementById("kontostand").innerHTML) {
+        alert("Sie haben nicht genug Geld für ihren Kauf");
     }
 
 
