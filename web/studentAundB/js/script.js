@@ -58,7 +58,7 @@ function init() {
         // }
 
 
-        getUpdateRangliste();
+
 
 
         let http2 = new XMLHttpRequest();
@@ -87,7 +87,7 @@ function init() {
         http2.send(null);
 
 
-        //für depot
+        //für depot und chart
         let http = new XMLHttpRequest();
         http.open("GET", url + "/data/depot", true);
         http.onreadystatechange = function () {
@@ -140,6 +140,8 @@ function init() {
         updateChart();
         getMessage();
         getUmsaetze();
+        getUpdateRangliste();
+
     }, updateInterval);
 
     setInterval(getShareName, 5000);
@@ -256,7 +258,7 @@ function getUpdateRangliste() {
 
             let div = document.createElement("div");
             rangliste.appendChild(div);
-            div.innerText = placement[i].name + "    " + extround(placement[i].summe, 2) + "€";
+            div.innerText = placement[i].name + "    " + extround(placement[i].summe, 2) + " €";
         }
     }
     http3.send(null);
