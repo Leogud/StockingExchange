@@ -8,11 +8,140 @@ const addRevenueAddr = "/data/umsaetze/add";
 const rankingAddr = "/data/besitzAlle";
 const revenueAddr = "/data/umsaetze";
 const messagesAddr = "/data/nachrichten";
+const depot="/data/depot";
+const DataFromUser="/data/userdata";
 let save = null;
 let userData = null;
 
 
 function init() {
+    // let chart = new CanvasJS.Chart("chartContainer", {
+    //     animationEnabled: true,
+    //     theme: "light2", // "light1", "light2", "dark1", "dark2"
+    //     title: {
+    //         text: "Alle Aktien"
+    //     },
+    //     axisY: {
+    //         title: "Wert"
+    //     },
+    //     data: [{
+    //         type: "column",
+    //         showInLegend: true,
+    //         legendMarkerColor: "grey",
+    //         legendText: "aktualisiert jede Sekunde",
+    //         dataPoints: []
+    //     }]
+    // });
+    // chart.render();
+
+
+    // const dps = []; // dataPoints
+    // const chart = new CanvasJS.Chart("chartContainer", {
+    //     title: {
+    //         text: "Aktienkurse"
+    //     },
+    //     axisY: {
+    //         includeZero: false
+    //     },
+    //     data: [{
+    //         type: "line",
+    //         dataPoints: dps
+    //     }]
+    // });
+
+
+        // count = count || 1;
+        //
+        // for (let j = 0; j < count; j++) {
+        //     yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
+        //     dps.push({
+        //         x: xVal,
+        //         y: yVal
+        //     });
+        //     xVal++;
+        // }
+        //
+        // if (dps.length > dataLength) {
+        //     dps.shift();
+        // }
+
+
+
+
+
+        //für depot und chart
+        // let http = new XMLHttpRequest();
+        // http.open("GET", url + "/data/depot", true);
+        // http.onreadystatechange = function () {
+        //     if (http.readyState === 4 && http.status === 200) {
+        //
+        //         save = JSON.parse(http.responseText);
+        //
+        //
+        //     }
+        // };
+        //
+        //
+        // if ((save != null) && (chart.options.data[0].dataPoints.length === 0)) {
+        //     let data = save.positionen;
+        //     for (let i = 0; i < data.length; i++) {
+        //
+        //         chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+        //
+        //
+        //         // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+        //
+        //
+        //         //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+        //         //chart.render();
+        //         //
+        //         // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
+        //
+        //     }
+        //
+        //     chart.render();
+        //
+        // } else if ((save != null) && (chart.options.data[0].dataPoints.length > 0)) {
+        //     let data = save.positionen;
+        //     for (let i = 0; i < data.length; i++) {
+        //         chart.options.data[0].dataPoints[i].y = data[i].aktie.preis;
+        //     }
+        //     chart.render();
+        // }
+        //
+        // http.send(null);
+
+
+
+
+
+    // updateChart(dataLength);
+
+
+    setInterval(function () {
+
+        getData(messagesAddr, getMessage);
+        getData(revenueAddr, getUmsaetze);
+        getData(rankingAddr, getUpdateRangliste);
+        getData(DataFromUser,getKontostand );
+        getData(depot, updateChart);
+    }, updateInterval);
+
+    setInterval(function () {
+        getData(sharesAddr, getShareName);
+    }, 5000);
+
+    document.getElementById("kaufen").onclick = function () {
+        getData(sharesAddr, buyShares);
+    };
+
+    document.getElementById("verkaufen").onclick = function () {
+        getData(sharesAddr, sellShares);
+    };
+
+
+}
+function createChart(){
     let chart = new CanvasJS.Chart("chartContainer", {
         animationEnabled: true,
         theme: "light2", // "light1", "light2", "dark1", "dark2"
@@ -31,137 +160,45 @@ function init() {
         }]
     });
     chart.render();
+    return chart;
+}
+function updateChart(save) {
+    let chart = createChart();
+    if ((save != null) && (chart.options.data[0].dataPoints.length === 0)) {
+        let data = save.positionen;
+        for (let i = 0; i < data.length; i++) {
+
+            chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
 
 
-    // const dps = []; // dataPoints
-    // const chart = new CanvasJS.Chart("chartContainer", {
-    //     title: {
-    //         text: "Aktienkurse"
-    //     },
-    //     axisY: {
-    //         includeZero: false
-    //     },
-    //     data: [{
-    //         type: "line",
-    //         dataPoints: dps
-    //     }]
-    // });
-    function updateChart() {
-
-        // count = count || 1;
-        //
-        // for (let j = 0; j < count; j++) {
-        //     yVal = yVal + Math.round(5 + Math.random() * (-5 - 5));
-        //     dps.push({
-        //         x: xVal,
-        //         y: yVal
-        //     });
-        //     xVal++;
-        // }
-        //
-        // if (dps.length > dataLength) {
-        //     dps.shift();
-        // }
-
-
-        let http2 = new XMLHttpRequest();
-        let name = document.getElementById("Benutzer");
-        let kontostand = document.getElementById("Kontostand");
-        //für benutzernamen und kontostand
-        http2.open("GET", url + "/data/userData", true);
-        http2.onreadystatechange = function () {
-            if (http2.readyState === 4 && http2.status === 200) {
-
-                userData = JSON.parse(http2.responseText);
-
-
-            }
-        };
-        if (userData != null) {
-
-
-            // alert("Name: "+ userData.name);
-            // alert("Kontostand: "+ userData.kontostand);
-            name.innerText = "Name: " + userData.name;
-            kontostand.innerText = "Kontostand: " + extround(userData.kontostand, 2) + "€";
 
 
         }
-        http2.send(null);
 
+        chart.render();
 
-        //für depot und chart
-        let http = new XMLHttpRequest();
-        http.open("GET", url + "/data/depot", true);
-        http.onreadystatechange = function () {
-            if (http.readyState === 4 && http.status === 200) {
-
-                save = JSON.parse(http.responseText);
-
-
-            }
-        };
-
-
-        if ((save != null) && (chart.options.data[0].dataPoints.length === 0)) {
-            let data = save.positionen;
-            for (let i = 0; i < data.length; i++) {
-
-                chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
-
-
-                // chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
-
-
-                //   chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
-                //chart.render();
-                //
-                // alert(data[i].aktie.preis+"  "+ data[i].aktie.name);
-
-            }
-
-            chart.render();
-
-        } else if ((save != null) && (chart.options.data[0].dataPoints.length > 0)) {
-            let data = save.positionen;
-            for (let i = 0; i < data.length; i++) {
-                chart.options.data[0].dataPoints[i].y = data[i].aktie.preis;
-            }
-            chart.render();
+    } else if ((save != null) && (chart.options.data[0].dataPoints.length > 0)) {
+        let data = save.positionen;
+        for (let i = 0; i < data.length; i++) {
+            chart.options.data[0].dataPoints[i].y = data[i].aktie.preis;
         }
+        chart.render();
+    }
+}
+function getKontostand(userData){
+    const name = document.getElementById("Benutzer");
+    const kontostand = document.getElementById("Kontostand");
+    if (userData != null) {
 
-        http.send(null);
+
+        // alert("Name: "+ userData.name);
+        // alert("Kontostand: "+ userData.kontostand);
+        name.innerText = "Name: " + userData.name;
+        kontostand.innerText = "Kontostand: " + extround(userData.kontostand, 2) + "€";
 
 
     }
-
-
-    // updateChart(dataLength);
-
-
-    setInterval(function () {
-        updateChart();
-        getData(messagesAddr, getMessage);
-        getData(revenueAddr, getUmsaetze);
-        getData(rankingAddr, getUpdateRangliste);
-
-    }, updateInterval);
-
-    setInterval(function () {
-        getData(sharesAddr, getShareName);
-    }, 5000);
-
-    document.getElementById("kaufen").onclick = function () {
-        getData(sharesAddr, buyShares);
-    };
-
-    document.getElementById("verkaufen").onclick = function () {
-        getData(sharesAddr, sellShares);
-    };
-
-
 }
-
 
 function getShareName(shares) {
 
