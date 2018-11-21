@@ -286,8 +286,11 @@ function sellShares() {
     }
 }
 
+//erstmal so
+let umsaetze = null;
+
 function getUmsaetze() {
-    let umsaetze = null;
+
     let http5 = new XMLHttpRequest();
     let umsatz = document.getElementById("umsaetze");
     http5.open("GET", url + "/data/umsaetze", true);
