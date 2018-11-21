@@ -58,9 +58,6 @@ function init() {
         // }
 
 
-        getUpdateRangliste();
-
-
         let http2 = new XMLHttpRequest();
         let name = document.getElementById("Benutzer");
         let kontostand = document.getElementById("Kontostand");
@@ -87,7 +84,7 @@ function init() {
         http2.send(null);
 
 
-        //für depot
+        //für depot und chart
         let http = new XMLHttpRequest();
         http.open("GET", url + "/data/depot", true);
         http.onreadystatechange = function () {
@@ -140,16 +137,15 @@ function init() {
         updateChart();
         getMessage();
         getUmsaetze();
+        getUpdateRangliste();
+
     }, updateInterval);
 
     setInterval(getShareName, 5000);
 
-    document.getElementById("kaufen").onclick = function () {
-        buyShares()
-    };
-    document.getElementById("verkaufen").onclick = function () {
-        sellShares();
-    };
+    document.getElementById("kaufen").onclick = buyShares();
+
+    document.getElementById("verkaufen").onclick = sellShares();
 
 
 }
@@ -158,6 +154,7 @@ function init() {
 let shares = null;
 
 function getShareName() {
+
     //für Aktienname in dropdownmenue
     let http4 = new XMLHttpRequest();
     http4.open("GET", url + "/data/alleAktien", true);
@@ -175,7 +172,7 @@ function getShareName() {
         const select = document.getElementById('aktien');
 
         for (let i = 0; i < shares.length; i++) {
-            select.options[i] = new Option(shares[i].name, i);
+            select.options[i] = new Option(shares[i].name, i.toString());
         }
     }
 
@@ -183,35 +180,35 @@ function getShareName() {
 }
 
 function buyShares() {
-
-    let aktienNummer = document.getElementById("aktien").value;
-    let aktie = null;
-    let anzahl = document.getElementById("anzahl").value;
-    if (anzahl <= 0 || isNaN(anzahl)) {
-        document.getElementById("anzahl").value = "0";
-        alert("Bitte eine positive Zahl eingeben");
-        return;
-    }
-
-    let http4 = new XMLHttpRequest();
-    http4.open("GET", url + "/data/alleAktien", true);
-    http4.onreadystatechange = function () {
-        if (http4.readyState === 4 && http4.status === 200) {
-
-            let shares = JSON.parse(http4.responseText);
-            aktie = shares[aktienNummer];
-            buyForReal(aktie, anzahl);
-
-
+    return function () {
+        let aktienNummer = document.getElementById("aktien").value;
+        let aktie = null;
+        let anzahl = document.getElementById("anzahl").value;
+        if (anzahl <= 0 || isNaN(anzahl)) {
+            document.getElementById("anzahl").value = "0";
+            alert("Bitte eine positive Zahl eingeben");
+            return;
         }
-    };
-    http4.send(null);
+
+        let http4 = new XMLHttpRequest();
+        http4.open("GET", url + "/data/alleAktien", true);
+        http4.onreadystatechange = function () {
+            if (http4.readyState === 4 && http4.status === 200) {
+
+                let shares = JSON.parse(http4.responseText);
+                aktie = shares[aktienNummer];
+                buyForReal(aktie, anzahl);
 
 
+            }
+        };
+        http4.send(null);
+
+    }
 }
 
 function buyForReal(aktie, anzahl) {
-    document.getElementById("anzahl").value = "0";
+    document.getElementById("anzahl").value = "";
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "/data/umsaetze/add", true);
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -256,38 +253,44 @@ function getUpdateRangliste() {
 
             let div = document.createElement("div");
             rangliste.appendChild(div);
-            div.innerText = placement[i].name + "    " + extround(placement[i].summe, 2) + "€";
+            div.innerText = placement[i].name + "    " + extround(placement[i].summe, 2) + " €";
         }
     }
     http3.send(null);
 }
 
 function sellShares() {
-    let aktienNummer = document.getElementById("aktien").value;
-    let aktie = null;
-    let anzahl = document.getElementById("anzahl").value;
-    if (anzahl <= 0 || isNaN(anzahl)) {
-        document.getElementById("anzahl").value = "0";
-        alert("Bitte eine positive Zahl eingeben");
-        return;
-    }
-
-    let http4 = new XMLHttpRequest();
-    http4.open("GET", url + "/data/alleAktien", true);
-    http4.onreadystatechange = function () {
-        if (http4.readyState === 4 && http4.status === 200) {
-
-            shares = JSON.parse(http4.responseText);
-            aktie = shares[aktienNummer];
-            buyForReal(aktie, anzahl * -1);
-
-
+    return function () {
+        let aktienNummer = document.getElementById("aktien").value;
+        let aktie = null;
+        let anzahl = document.getElementById("anzahl").value;
+        if (anzahl <= 0 || isNaN(anzahl)) {
+            document.getElementById("anzahl").value = "0";
+            alert("Bitte eine positive Zahl eingeben");
+            return;
         }
-    };
-    http4.send(null);
+
+        let http4 = new XMLHttpRequest();
+        http4.open("GET", url + "/data/alleAktien", true);
+        http4.onreadystatechange = function () {
+            if (http4.readyState === 4 && http4.status === 200) {
+
+                shares = JSON.parse(http4.responseText);
+                aktie = shares[aktienNummer];
+                buyForReal(aktie, anzahl * -1);
+
+
+            }
+        };
+        http4.send(null);
+    }
 }
 
+//erstmal so
+let umsaetze = null;
+
 function getUmsaetze() {
+
     let http5 = new XMLHttpRequest();
     let umsatz = document.getElementById("umsaetze");
     http5.open("GET", url + "/data/umsaetze", true);
@@ -345,8 +348,7 @@ function getMessage() {
                 nachricht += " Uhr";
                 if (messages[i - 1].text.charAt(0) === "K") {
                     nachricht += " kaufte";
-                    let substr = messages[i - 1].text.substring(5, messages[i - 1].text.lastIndexOf(":"));
-                    nachricht += substr;
+                    nachricht += messages[i - 1].text.substring(5, messages[i - 1].text.lastIndexOf(":"));
                     let substr2 = messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(":") + 1, messages[i - 1].text.lastIndexOf(" "));
                     nachricht += substr2;
                     if (substr2 !== " 1") {
@@ -355,12 +357,10 @@ function getMessage() {
                         nachricht += " Aktie";
                     }
                     nachricht += " von";
-                    let substr3 = messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(" "));
-                    nachricht += substr3;
+                    nachricht += messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(" "));
                 } else {
                     nachricht += " verkaufte";
-                    let substr = messages[i - 1].text.substring(8, messages[i - 1].text.lastIndexOf(":"));
-                    nachricht += substr;
+                    nachricht += messages[i - 1].text.substring(8, messages[i - 1].text.lastIndexOf(":"));
                     let substr2 = messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(":") + 1, messages[i - 1].text.lastIndexOf(" "));
                     nachricht += substr2;
                     if (substr2 !== " 1") {
@@ -369,8 +369,7 @@ function getMessage() {
                         nachricht += " Aktie";
                     }
                     nachricht += " von";
-                    let substr3 = messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(" "));
-                    nachricht += substr3;
+                    nachricht += messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(" "));
                 }
                 let div = document.createElement("div");
                 nachrichten.appendChild(div);
