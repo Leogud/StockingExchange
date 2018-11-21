@@ -273,7 +273,7 @@ function buyShares(shares) {
 
         }
     }
-    if (anzahl * depot[aktienNummer].aktie.preis > document.getElementById("kontostand").innerHTML) {
+    if (anzahl * depot[aktienNummer].aktie.preis > document.getElementById("kontostand").innerHTML && depot[aktienNummer].aktie.anzahlVerfuegbar >= anzahl) {
         alert("Sie haben nicht genug Geld für ihren Kauf");
     }
 
