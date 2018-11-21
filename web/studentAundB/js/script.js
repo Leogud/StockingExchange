@@ -152,11 +152,11 @@ function init() {
     }, 5000);
 
     document.getElementById("kaufen").onclick = function () {
-        getData(sharesAddr, buyShares);
+        getData(depotAddr, buyShares);
     };
 
     document.getElementById("verkaufen").onclick = function () {
-        getData(sharesAddr, sellShares);
+        getData(depotAddr, sellShares);
     };
 
 
@@ -178,24 +178,33 @@ function buyShares(shares) {
     let aktienNummer = document.getElementById("aktien").value;
     let anzahl = document.getElementById("anzahl").value;
     if (anzahl <= 0 || isNaN(anzahl)) {
-        document.getElementById("anzahl").value = "0";
+        document.getElementById("anzahl").value = "";
         alert("Bitte eine positive Zahl eingeben");
         return;
     }
+    let depot = shares.positionen;
+    for (let i = 0; i < depot.length; i++) {
+        if (depot[i].aktie.name === depot[aktienNummer].aktie.name) {
+            if (depot[i].aktie.anzahlVerfuegbar < anzahl) {
+                alert("Es sind leider nicht mehr so viele Aktien von " + depot[i].aktie.name + " verfügbar")
+            }
+        }
+    }
 
 
-    buyForReal(shares[aktienNummer], anzahl);
+    depot[aktienNummer].anzahl = anzahl;
+    buySell(depot[aktienNummer]);
 
 
 }
 
-function buyForReal(aktie, anzahl) {
+function buySell(aktie) {
     document.getElementById("anzahl").value = "";
     let xhr = new XMLHttpRequest();
     xhr.open("POST", addRevenueAddr, true);
     xhr.setRequestHeader("Content-Type", "application/json");
 
-    xhr.send('{"aktie":' + JSON.stringify(aktie) + ',"anzahl":' + anzahl + '}');
+    xhr.send(JSON.stringify(aktie));
 
 }
 
@@ -227,13 +236,26 @@ function sellShares(shares) {
     let aktienNummer = document.getElementById("aktien").value;
     let anzahl = document.getElementById("anzahl").value;
     if (anzahl <= 0 || isNaN(anzahl)) {
-        document.getElementById("anzahl").value = "0";
+        document.getElementById("anzahl").value = "";
         alert("Bitte eine positive Zahl eingeben");
         return;
     }
+    let anz = 0;
+    let depot = shares.positionen;
+    for (let i = 0; i < depot.length; i++) {
+        if (depot[i].aktie.name === depot[aktienNummer].aktie.name) {
+            anz = depot[i].anzahl;
+        }
+    }
+    if (anz === 0) {
+        alert("Sie können keine Aktie verkaufen die sie nicht besitzen");
+    }
+    if (anz !== 0 && anz < anzahl) {
+        alert("Verkauf fehlgeschlagen! Sie wollten " + anzahl + " Aktien von " + depot[aktienNummer].aktie.name + " verkaufen, haben aber nur noch " + anz + " Aktien im Besitz");
+    }
 
-
-    buyForReal(shares[aktienNummer], anzahl * -1);
+    depot[aktienNummer].anzahl = anzahl * -1;
+    buySell(depot[aktienNummer]);
 
 
 }
