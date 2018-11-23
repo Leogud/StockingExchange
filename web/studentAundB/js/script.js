@@ -391,10 +391,13 @@ function getMessage(messages) {
     let nachrichten = document.getElementById("nachrichten");
     nachrichten.innerText = "Nachrichten";
 
-    let nachrichtenArr = [];
+    let dispensableMsg = 0;
+    if (messages.length > 50) {
+        dispensableMsg = messages.length - 50;
+    }
 
 
-    for (let i = messages.length; i > 0; i--) {
+    for (let i = messages.length; i > dispensableMsg; i--) {
         let nachricht = "Um ";
         nachricht += messages[i - 1].uhrzeit;
         nachricht += " Uhr";
@@ -424,12 +427,7 @@ function getMessage(messages) {
             nachricht += messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(" "));
         }
         let div = document.createElement("div");
-        nachrichtenArr.push(nachrichten.appendChild(div));
-        if (nachrichtenArr.length > 50) {
-            for (let i = 49; i < nachrichtenArr.length; i++) {
-                nachrichtenArr[i].splice(i, 1);
-            }
-        }
+        nachrichten.appendChild(div);
         div.innerText = nachricht;
     }
 
