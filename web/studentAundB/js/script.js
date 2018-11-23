@@ -8,7 +8,6 @@ const addRevenueAddr = "/data/umsaetze/add";
 const rankingAddr = "/data/besitzAlle";
 const revenueAddr = "/data/umsaetze";
 const messagesAddr = "/data/nachrichten";
-const depot = "/data/depot";
 
 
 function init() {
@@ -115,12 +114,10 @@ function init() {
         getData(revenueAddr, getUmsaetze);
         getData(rankingAddr, getUpdateRangliste);
         getData(userAddr, getKontostand);
-        getData(depot, createChart);
+        getData(depotAddr, createChart);
+        getData(sharesAddr, getShareName);
     }, updateInterval);
 
-    setInterval(function () {
-        getData(sharesAddr, getShareName);
-    }, 5000);
 
     document.getElementById("kaufen").onclick = function () {
         getData(depotAddr, buyShares);
@@ -135,7 +132,7 @@ function init() {
 
 function createChart(save) {
     let data = save.positionen;
-    let dataArray=[];
+    let dataArray = [];
     let chart = new CanvasJS.Chart("chartContainer", {
         theme: "light2",
         animationEnabled: true,
@@ -156,41 +153,35 @@ function createChart(save) {
         },
 
 
-
     });
 
-    for(let i = 0 ; i<data.length;i++){
-        let dato= {
+    for (let i = 0; i < data.length; i++) {
+        let dato = {
             type: "spline",
             visible: true,
             name: data[i].aktie.name,
 
         };
         chart.options.data.push(dato);
-        dato.dataPoints= [{label: data[i].aktie.name, y: data[i].aktie.preis}];
+        dato.dataPoints = [{label: data[i].aktie.name, y: data[i].aktie.preis}];
 
 
     }
-
-
-
-
-
-
 
 
     chart.render();
 
 
-function toggleDataSeries(e) {
-    if (typeof(e.dataSeries.visible) === "undefined" || e.dataSeries.visible ){
-        e.dataSeries.visible = false;
-    } else {
-        e.dataSeries.visible = true;
+    function toggleDataSeries(e) {
+        if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+            e.dataSeries.visible = false;
+        } else {
+            e.dataSeries.visible = true;
+        }
+        chart.render();
     }
-     chart.render();
 }
-}
+
 // let x=0;
 // function updateChart(save) {
 //     let array=[];
@@ -208,41 +199,43 @@ function toggleDataSeries(e) {
 //     chart.render();
 
 
-    // if ((save != null) && (chart.options.data[0].dataPoints.length === 0)) {
-    //     let data = save.positionen;
-    //     for (let i = 0; i < data.length; i++) {
-    //
-    //         chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
-    //
-    //
-    //     }
-    //
-    //     chart.render();
-    //
-    // } else if ((save != null) && (chart.options.data[0].dataPoints.length > 0)) {
-    //     let data = save.positionen;
-    //     for (let i = 0; i < data.length; i++) {
-    //         chart.options.data[0].dataPoints[i].y = data[i].aktie.preis;
-    //     }
-    //     chart.render();
-    // }
+// if ((save != null) && (chart.options.data[0].dataPoints.length === 0)) {
+//     let data = save.positionen;
+//     for (let i = 0; i < data.length; i++) {
+//
+//         chart.options.data[0].dataPoints.push({y: data[i].aktie.preis, label: data[i].aktie.name});
+//
+//
+//     }
+//
+//     chart.render();
+//
+// } else if ((save != null) && (chart.options.data[0].dataPoints.length > 0)) {
+//     let data = save.positionen;
+//     for (let i = 0; i < data.length; i++) {
+//         chart.options.data[0].dataPoints[i].y = data[i].aktie.preis;
+//     }
+//     chart.render();
 // }
-function getFirst(data_object){
-   let name= data_object.aktie.name;
-   let preis= data_object.aktie.preis;
-   let array = [{type: "spline",
-       visible: true,
-       showInLegend: true,
+// }
+function getFirst(data_object) {
+    let name = data_object.aktie.name;
+    let preis = data_object.aktie.preis;
+    let array = [{
+        type: "spline",
+        visible: true,
+        showInLegend: true,
 
-       name: name,
-       dataPoints: [
-           {label: name, y: preis}
-       ]
-   }];
-   return array;
+        name: name,
+        dataPoints: [
+            {label: name, y: preis}
+        ]
+    }];
+    return array;
 
 
 }
+
 function getKontostand(userData) {
     const name = document.getElementById("benutzer");
     const kontostand = document.getElementById("kontostand");
@@ -258,13 +251,18 @@ function getKontostand(userData) {
     }
 }
 
+let currentShare = 0;
+
 function getShareName(shares) {
     //für Aktienname in dropdownmenue
     const select = document.getElementById('aktien');
+    currentShare = select.value;
+
 
     for (let i = 0; i < shares.length; i++) {
         select.options[i] = new Option(shares[i].name, i.toString());
     }
+    select.selectedIndex = currentShare;
 
 }
 
@@ -333,6 +331,7 @@ function getUpdateRangliste(placement) {
 function sellShares(shares) {
     let aktienNummer = document.getElementById("aktien").value;
     let anzahl = document.getElementById("anzahl").value;
+    aktienNummer.selectedIndex = 0;
     if (anzahl <= 0 || isNaN(anzahl)) {
         document.getElementById("anzahl").value = "";
         alert("Bitte eine positive Zahl eingeben");
@@ -387,16 +386,14 @@ function extround(zahl, n_stelle) {
     return zahl;
 }
 
-// let anzahlNachrichten = 0;
 
 function getMessage(messages) {
     let nachrichten = document.getElementById("nachrichten");
-
     nachrichten.innerText = "Nachrichten";
 
+    let nachrichtenArr = [];
 
-    // if (anzahlNachrichten !== messages.length) {
-    //     anzahlNachrichten = messages.length;
+
     for (let i = messages.length; i > 0; i--) {
         let nachricht = "Um ";
         nachricht += messages[i - 1].uhrzeit;
@@ -427,7 +424,12 @@ function getMessage(messages) {
             nachricht += messages[i - 1].text.substring(messages[i - 1].text.lastIndexOf(" "));
         }
         let div = document.createElement("div");
-        nachrichten.appendChild(div);
+        nachrichtenArr.push(nachrichten.appendChild(div));
+        if (nachrichtenArr.length > 50) {
+            for (let i = 49; i < nachrichtenArr.length; i++) {
+                nachrichtenArr[i].splice(i, 1);
+            }
+        }
         div.innerText = nachricht;
     }
 
