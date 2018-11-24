@@ -1,12 +1,13 @@
 #chartContainer {
-    height: 15%;
+    height: 100%;
     width: 40%;
     margin-left: 10%;
+    margin-bottom: 5%;
     float: left;
 }
 #chart{
-    height: max-content;
-    width: max-content;
+    height: 50%;
+    width: 50%;
 }
 header {
 
