@@ -8,7 +8,7 @@ const addRevenueAddr = "/data/umsaetze/add";
 const rankingAddr = "/data/besitzAlle";
 const revenueAddr = "/data/umsaetze";
 const messagesAddr = "/data/nachrichten";
-let xValue=0;
+let xValue = 0;
 
 
 function init() {
@@ -52,21 +52,18 @@ function createChart() {
     chart.update();
 
 
-
-
-
     return chart;
 
 
 }
 
-function getChartData(url, successCallBack, chart){
+function getChartData(url, successCallBack, chart) {
     let request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.onreadystatechange = function () {
         if (request.readyState === 4 && request.status === 200) {
 
-            successCallBack(JSON.parse(request.responseText),chart);
+            successCallBack(JSON.parse(request.responseText), chart);
 
 
         }
@@ -78,23 +75,22 @@ function getChartData(url, successCallBack, chart){
 }
 
 
-
-function updateChart(save, chart){
-xValue++;
+function updateChart(save, chart) {
+    xValue++;
     chart.data.labels.push(xValue);
-    if(save.length!==0) {
+    if (save.length !== 0) {
         for (let i = 0; i < save.length; i++) {
             chart.data.datasets[i].data.push(save[i].preis);
         }
     }
-    
-chart.update();
+
+    chart.update();
 
 }
 
 function createNewGraph(save, chart) {
 
-    for(let i = 0; i < save.length; i++){
+    for (let i = 0; i < save.length; i++) {
         let newGraph = {
             label: save[i].name,
             data: [],
@@ -107,6 +103,7 @@ function createNewGraph(save, chart) {
     }
     chart.update();
 }
+
 function getRandomColor() {
     let letters = '0123456789ABCDEF';
     let color = '#';
@@ -115,6 +112,7 @@ function getRandomColor() {
     }
     return color;
 }
+
 function getKontostand(userData) {
     const name = document.getElementById("benutzer");
     const kontostand = document.getElementById("kontostand");

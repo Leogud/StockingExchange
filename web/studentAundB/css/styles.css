@@ -4,10 +4,12 @@
     margin-left: 10%;
     float: left;
 }
-#chart{
+
+#chart {
     height: max-content;
     width: max-content;
 }
+
 header {
 
     height: 20%;
