@@ -16,14 +16,16 @@ function init() {
 
     let chart = createChart();
     getChartData(sharesAddr, createNewGraph, chart);
+    getChartData(sharesAddr, updateChart, chart);
     setInterval(function () {
-        getChartData(sharesAddr, updateChart, chart);
+
         getData(messagesAddr, getMessage);
         getData(revenueAddr, getUmsaetze);
         getData(rankingAddr, getUpdateRangliste);
         getData(userAddr, getKontostand);
         getData(depotAddr, createChart);
         getData(sharesAddr, getShareName);
+        getChartData(sharesAddr, updateChart, chart);
     }, updateInterval);
 
 
@@ -46,7 +48,10 @@ function createChart() {
             title: {
                 display: true,
                 text: 'AKTIENKURSE'
-            }
+            },  animation: {
+                duration: 0,
+            }, xAxes:{
+            showXLabels: 10}
         }
     });
     chart.update();
@@ -80,13 +85,15 @@ function getChartData(url, successCallBack, chart){
 
 
 function updateChart(save, chart){
-xValue++;
+    xValue++;
+
     chart.data.labels.push(xValue);
     if(save.length!==0) {
         for (let i = 0; i < save.length; i++) {
             chart.data.datasets[i].data.push(save[i].preis);
         }
     }
+
     
 chart.update();
 
@@ -100,9 +107,12 @@ function createNewGraph(save, chart) {
             data: [],
             borderColor: getRandomColor(),
             borderWidth: 1,
-            fill: false
+            fill: false,
+            visibility:true,
+
         };
         chart.data.datasets.push(newGraph);
+
 
     }
     chart.update();
