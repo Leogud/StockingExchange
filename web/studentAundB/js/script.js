@@ -9,7 +9,7 @@ const rankingAddr = "/data/besitzAlle";
 const revenueAddr = "/data/umsaetze";
 const messagesAddr = "/data/nachrichten";
 let xValue=0;
-
+let timeCounter=0;
 
 function init() {
 
@@ -25,7 +25,12 @@ function init() {
         getData(userAddr, getKontostand);
         getData(depotAddr, createChart);
         getData(sharesAddr, getShareName);
-        getChartData(sharesAddr, updateChart, chart);
+      if(timeCounter<15) { getChartData(sharesAddr, updateChart, chart);}else{
+          timeCounter=0;
+          chart=createChart();
+          getChartData(sharesAddr, createNewGraph, chart);
+          getChartData(sharesAddr, updateChart, chart);
+      }
     }, updateInterval);
 
 
@@ -86,7 +91,7 @@ function getChartData(url, successCallBack, chart){
 
 function updateChart(save, chart){
     xValue++;
-
+    timeCounter++;
     if(xValue % 10===0){
 
         for(let i =0; i<chart.data.length;i++){
