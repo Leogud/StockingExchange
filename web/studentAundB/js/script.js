@@ -8,8 +8,8 @@ const addRevenueAddr = "/data/umsaetze/add";
 const rankingAddr = "/data/besitzAlle";
 const revenueAddr = "/data/umsaetze";
 const messagesAddr = "/data/nachrichten";
-let xValue=0;
-let timeCounter=0;
+let xValue = 0;   //Zähler für Diagramm
+let timeCounter = 0;  //Neu Zähler für Diagramm
 
 function init() {
 
@@ -17,20 +17,24 @@ function init() {
     let chart = createChart();
     getChartData(sharesAddr, createNewGraph, chart);
     getChartData(sharesAddr, updateChart, chart);
-    setInterval(function () {
 
+    setInterval(function () {
+        //Intervall=1 s, alle Getter jede Sekunde aufrufen
         getData(messagesAddr, getMessage);
         getData(revenueAddr, getUmsaetze);
         getData(rankingAddr, getUpdateRangliste);
         getData(userAddr, getKontostand);
         getData(depotAddr, createChart);
         getData(sharesAddr, getShareName);
-      if(timeCounter<15) { getChartData(sharesAddr, updateChart, chart);}else{
-          timeCounter=0;
-          chart=createChart();
-          getChartData(sharesAddr, createNewGraph, chart);
-          getChartData(sharesAddr, updateChart, chart);
-      }
+        //Überprüfung Diagramm 15 Punkte hat, wenn ja neues Diagramm
+        if (timeCounter < 15) {
+            getChartData(sharesAddr, updateChart, chart);
+        } else {
+            timeCounter = 0;
+            chart = createChart();
+            getChartData(sharesAddr, createNewGraph, chart);
+            getChartData(sharesAddr, updateChart, chart);
+        }
     }, updateInterval);
 
 
@@ -46,37 +50,34 @@ function init() {
 }
 
 function createChart() {
-
+// neues Chart mit Chart.js
     let chart = new Chart(document.getElementById("chart"), {
         type: 'line',
         options: {
             title: {
                 display: true,
                 text: 'AKTIENKURSE'
-            },  animation: {
+            }, animation: {
                 duration: 0,
-            }, labels: { showLabels: 10 }
+            },
         }
     });
 
     chart.update();
-
-
-
-
 
     return chart;
 
 
 }
 
-function getChartData(url, successCallBack, chart){
+function getChartData(url, successCallBack, chart) {
+    //Getter für Chart, weil chart als Übergabe nötig
     let request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.onreadystatechange = function () {
         if (request.readyState === 4 && request.status === 200) {
 
-            successCallBack(JSON.parse(request.responseText),chart);
+            successCallBack(JSON.parse(request.responseText), chart);
 
 
         }
@@ -88,38 +89,34 @@ function getChartData(url, successCallBack, chart){
 }
 
 
-
-function updateChart(save, chart){
+function updateChart(save, chart) {
+    // xValue-> Zeitzähler für Diagramm, timeCounter-> Abbruch
+    //pusht neue Daten vom Getter zum Diagramm
     xValue++;
     timeCounter++;
-    if(xValue % 10===0){
 
-        for(let i =0; i<chart.data.length;i++){
-            chart.data.datasets[i].data.removeItem();
-        }
-    }
     chart.data.labels.push(xValue);
-    if(save.length!==0) {
+    if (save.length !== 0) {
         for (let i = 0; i < save.length; i++) {
             chart.data.datasets[i].data.push(save[i].preis);
         }
     }
 
-    
-chart.update();
+
+    chart.update();
 
 }
 
 function createNewGraph(save, chart) {
-
-    for(let i = 0; i < save.length; i++){
+//erstellt für jede Aktie einen Graphen im Diagramm
+    for (let i = 0; i < save.length; i++) {
         let newGraph = {
             label: save[i].name,
             data: [],
             backgroundColor: getRandomColor(),
             borderWidth: 3,
             fill: false,
-            visibility:true,
+            visibility: true,
 
         };
         chart.data.datasets.push(newGraph);
@@ -128,7 +125,9 @@ function createNewGraph(save, chart) {
     }
     chart.update();
 }
+
 function getRandomColor() {
+    //random color function für Farben im Diagramm
     let letters = '0123456789ABCDEF';
     let color = '#';
     for (let i = 0; i < 6; i++) {
@@ -136,14 +135,14 @@ function getRandomColor() {
     }
     return color;
 }
+
 function getKontostand(userData) {
+    // zeigt aktuellen Kontostand des angemeldeten Users
     const name = document.getElementById("benutzer");
     const kontostand = document.getElementById("kontostand");
     if (userData != null) {
 
 
-        // alert("Name: "+ userData.name);
-        // alert("Kontostand: "+ userData.kontostand);
         name.innerText = userData.name;
         kontostand.innerText = extround(userData.kontostand, 2);
 
@@ -206,17 +205,13 @@ function buySell(aktie) {
 
 
 function getUpdateRangliste(placement) {
-//für die Rangliste
+//für die Rangliste zeigt aktuell möglichen Kontostand der Person, wenn direkt alle Aktien verkauft werden
 
 
     placement.sort(function (a, b) {
         return b.summe - a.summe;
     });
     let rangliste = document.getElementById("rangliste");
-    // if (rangliste.childElementCount > 0) {
-    //     let rangliste = document.createElement("div");
-    //     rangliste.id = "rangliste";
-    // }
     rangliste.innerText = "Rangliste";
     for (let i = 0; i < placement.length; i++) {
 
@@ -259,7 +254,7 @@ function sellShares(shares) {
 
 
 function getUmsaetze(umsaetze) {
-
+//zeigt neuste Umsätze zuerst
     let umsatz = document.getElementById("umsaetze");
 
 
@@ -332,7 +327,6 @@ function getMessage(messages) {
     }
 
 
-    // }
 
 
 }
