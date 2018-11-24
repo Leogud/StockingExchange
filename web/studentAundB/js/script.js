@@ -87,6 +87,12 @@ function getChartData(url, successCallBack, chart){
 function updateChart(save, chart){
     xValue++;
 
+    if(xValue % 10===0){
+
+        for(let i =0; i<chart.data.length;i++){
+            chart.data.datasets[i].data.removeItem();
+        }
+    }
     chart.data.labels.push(xValue);
     if(save.length!==0) {
         for (let i = 0; i < save.length; i++) {
