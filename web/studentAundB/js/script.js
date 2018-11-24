@@ -50,10 +50,10 @@ function createChart() {
                 text: 'AKTIENKURSE'
             },  animation: {
                 duration: 0,
-            }, xAxes:{
-            showXLabels: 10}
+            }, labels: { showLabels: 10 }
         }
     });
+
     chart.update();
 
 
@@ -105,8 +105,8 @@ function createNewGraph(save, chart) {
         let newGraph = {
             label: save[i].name,
             data: [],
-            borderColor: getRandomColor(),
-            borderWidth: 1,
+            backgroundColor: getRandomColor(),
+            borderWidth: 3,
             fill: false,
             visibility:true,
 
