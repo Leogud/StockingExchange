@@ -8,8 +8,8 @@ const addRevenueAddr = "/data/umsaetze/add";
 const rankingAddr = "/data/besitzAlle";
 const revenueAddr = "/data/umsaetze";
 const messagesAddr = "/data/nachrichten";
-let xValue = 0;
-
+let xValue = 0;   //Zähler für Diagramm
+let timeCounter = 0;  //Neu Zähler für Diagramm
 
 function init() {
 
@@ -17,22 +17,32 @@ function init() {
     let chart = createChart();
     getChartData(sharesAddr, createNewGraph, chart);
     getChartData(sharesAddr, updateChart, chart);
-    setInterval(function () {
 
+    setInterval(function () {
+        //Intervall=1 s, alle Getter jede Sekunde aufrufen
         getData(messagesAddr, getMessage);
         getData(revenueAddr, getUmsaetze);
         getData(rankingAddr, getUpdateRangliste);
         getData(userAddr, getKontostand);
         getData(depotAddr, createChart);
         getData(sharesAddr, getShareName);
-        getChartData(sharesAddr, updateChart, chart);
+        //Überprüfung Diagramm 15 Punkte hat, wenn ja neues Diagramm
+        if (timeCounter < 15) {
+            getChartData(sharesAddr, updateChart, chart);
+        } else {
+            timeCounter = 0;
+            chart = createChart();
+            getChartData(sharesAddr, createNewGraph, chart);
+            getChartData(sharesAddr, updateChart, chart);
+        }
     }, updateInterval);
 
-
+    //wenn der Kaufen-Button angeklickt wird
     document.getElementById("kaufen").onclick = function () {
         getData(depotAddr, buyShares);
     };
 
+    //wenn der Verkaufen-Button angeklickt wird
     document.getElementById("verkaufen").onclick = function () {
         getData(depotAddr, sellShares);
     };
@@ -41,16 +51,16 @@ function init() {
 }
 
 function createChart() {
-
+// neues Chart mit Chart.js
     let chart = new Chart(document.getElementById("chart"), {
         type: 'line',
         options: {
             title: {
                 display: true,
                 text: 'AKTIENKURSE'
-            },  animation: {
+            }, animation: {
                 duration: 0,
-            }, labels: { showLabels: 10 }
+            },
         }
     });
 
@@ -63,6 +73,7 @@ function createChart() {
 }
 
 function getChartData(url, successCallBack, chart) {
+    //Getter für Chart, weil chart als Übergabe nötig
     let request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.onreadystatechange = function () {
@@ -80,9 +91,11 @@ function getChartData(url, successCallBack, chart) {
 }
 
 
-
-function updateChart(save, chart){
+function updateChart(save, chart) {
+    // xValue-> Zeitzähler für Diagramm, timeCounter-> Abbruch
+    //pusht neue Daten vom Getter zum Diagramm
     xValue++;
+    timeCounter++;
 
     chart.data.labels.push(xValue);
     if (save.length !== 0) {
@@ -90,13 +103,14 @@ function updateChart(save, chart){
             chart.data.datasets[i].data.push(save[i].preis);
         }
     }
-    
-chart.update();
+
+
+    chart.update();
 
 }
 
 function createNewGraph(save, chart) {
-
+//erstellt für jede Aktie einen Graphen im Diagramm
     for (let i = 0; i < save.length; i++) {
         let newGraph = {
             label: save[i].name,
@@ -104,7 +118,7 @@ function createNewGraph(save, chart) {
             backgroundColor: getRandomColor(),
             borderWidth: 3,
             fill: false,
-            visibility:true,
+            visibility: true,
 
         };
         chart.data.datasets.push(newGraph);
@@ -115,6 +129,7 @@ function createNewGraph(save, chart) {
 }
 
 function getRandomColor() {
+    //random color function für Farben im Diagramm
     let letters = '0123456789ABCDEF';
     let color = '#';
     for (let i = 0; i < 6; i++) {
@@ -124,13 +139,12 @@ function getRandomColor() {
 }
 
 function getKontostand(userData) {
+    // zeigt aktuellen Kontostand des angemeldeten Users
     const name = document.getElementById("benutzer");
     const kontostand = document.getElementById("kontostand");
     if (userData != null) {
 
 
-        // alert("Name: "+ userData.name);
-        // alert("Kontostand: "+ userData.kontostand);
         name.innerText = userData.name;
         kontostand.innerText = extround(userData.kontostand, 2);
 
@@ -138,10 +152,11 @@ function getKontostand(userData) {
     }
 }
 
+//damit die als letztes ausgewählte Aktie nicht während der Aktualisierung verschwindet
 let currentShare = 0;
 
 function getShareName(shares) {
-    //für Aktienname in dropdownmenue
+    //für Aktiennamen im dropdownmenue
     const select = document.getElementById('aktien');
     currentShare = select.value;
 
@@ -156,12 +171,14 @@ function getShareName(shares) {
 function buyShares(shares) {
     let aktienNummer = document.getElementById("aktien").value;
     let anzahl = document.getElementById("anzahl").value;
+    //Fehlermeldung wenn die Eingabe Buchstaben oder eine negative Zahl enthält
     if (anzahl <= 0 || isNaN(anzahl)) {
         document.getElementById("anzahl").value = "";
         alert("Bitte eine positive Zahl eingeben");
         return;
     }
     let depot = shares.positionen;
+    //Überprüfung ob es so viele Aktien gibt wie gekauft werden wollen
     for (let i = 0; i < depot.length; i++) {
         if (depot[i].aktie.name === depot[aktienNummer].aktie.name) {
             if (depot[i].aktie.anzahlVerfuegbar < anzahl) {
@@ -170,6 +187,7 @@ function buyShares(shares) {
 
         }
     }
+    //Kontostand mit dem Aktienpreis * Anzahl verglichen um zu schauen ob man sich es leisten kann
     if (anzahl * depot[aktienNummer].aktie.preis > document.getElementById("kontostand").innerHTML && depot[aktienNummer].aktie.anzahlVerfuegbar >= anzahl) {
         alert("Sie haben nicht genug Geld für ihren Kauf");
     }
@@ -181,7 +199,9 @@ function buyShares(shares) {
 
 }
 
+
 function buySell(aktie) {
+    //post Funktion
     document.getElementById("anzahl").value = "";
     let xhr = new XMLHttpRequest();
     xhr.open("POST", addRevenueAddr, true);
@@ -193,17 +213,13 @@ function buySell(aktie) {
 
 
 function getUpdateRangliste(placement) {
-//für die Rangliste
+//für die Rangliste zeigt aktuell möglichen Kontostand der Person, wenn direkt alle Aktien verkauft werden
 
 
     placement.sort(function (a, b) {
         return b.summe - a.summe;
     });
     let rangliste = document.getElementById("rangliste");
-    // if (rangliste.childElementCount > 0) {
-    //     let rangliste = document.createElement("div");
-    //     rangliste.id = "rangliste";
-    // }
     rangliste.innerText = "Rangliste";
     for (let i = 0; i < placement.length; i++) {
 
@@ -219,6 +235,7 @@ function sellShares(shares) {
     let aktienNummer = document.getElementById("aktien").value;
     let anzahl = document.getElementById("anzahl").value;
     aktienNummer.selectedIndex = 0;
+    //Fehlermeldung wenn die Eingabe Buchstaben oder eine negative Zahl enthält
     if (anzahl <= 0 || isNaN(anzahl)) {
         document.getElementById("anzahl").value = "";
         alert("Bitte eine positive Zahl eingeben");
@@ -231,9 +248,11 @@ function sellShares(shares) {
             anz = depot[i].anzahl;
         }
     }
+    //Überprüfung ob sich die ausgewählte Aktie im Besitz befindet
     if (anz === 0) {
         alert("Sie können keine Aktie verkaufen die sie nicht besitzen");
     }
+    //Überprüfung ob man die Anzahl die man verkaufen will im Besitz hat
     if (anz !== 0 && anz < anzahl) {
         alert("Verkauf fehlgeschlagen! Sie wollten " + anzahl + " Aktien von " + depot[aktienNummer].aktie.name + " verkaufen, haben aber nur noch " + anz + " Aktien im Besitz");
     }
@@ -246,7 +265,7 @@ function sellShares(shares) {
 
 
 function getUmsaetze(umsaetze) {
-
+//zeigt neuste Umsätze zuerst
     let umsatz = document.getElementById("umsaetze");
 
 
@@ -278,12 +297,13 @@ function getMessage(messages) {
     let nachrichten = document.getElementById("nachrichten");
     nachrichten.innerText = "Nachrichten";
 
+    //Das div auf die 50 neuesten Nachrichten begrenzen
     let dispensableMsg = 0;
     if (messages.length > 50) {
         dispensableMsg = messages.length - 50;
     }
 
-
+    //Mit dem Object aus der Nachrichtenschnittstelle einen geeigneten Satz formen
     for (let i = messages.length; i > dispensableMsg; i--) {
         let nachricht = "Um ";
         nachricht += messages[i - 1].uhrzeit;
@@ -319,13 +339,11 @@ function getMessage(messages) {
     }
 
 
-    // }
-
-
 }
 
 
 function getData(url, successCallback) {
+    //get Funktion
     let request = new XMLHttpRequest();
     request.open("GET", url, true);
     request.onreadystatechange = function () {
