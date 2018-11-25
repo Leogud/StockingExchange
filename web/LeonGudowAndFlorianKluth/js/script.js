@@ -1,6 +1,5 @@
 window.onload = init;
 const updateInterval = 1000;
-const url = "http://localhost:3000";
 const userAddr = "/data/userData";
 const depotAddr = "/data/depot";
 const sharesAddr = "/data/alleAktien";
